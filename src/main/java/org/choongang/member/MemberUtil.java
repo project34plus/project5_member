@@ -2,7 +2,6 @@ package org.choongang.member;
 
 import lombok.RequiredArgsConstructor;
 import org.choongang.member.constants.Authority;
-import org.choongang.member.entities.Authorities;
 import org.choongang.member.entities.Member;
 import org.choongang.member.repositories.MemberRepository;
 import org.springframework.security.core.Authentication;
@@ -23,8 +22,7 @@ public class MemberUtil {
 
     public boolean isAdmin() {
         if (isLogin()) {
-            List<Authorities> authorities = getMember().getAuthorities();
-            return authorities.stream().anyMatch(s -> s.getAuthority().equals(Authority.ADMIN));
+            return getMember().getAuthority() == Authority.ADMIN;
         }
         return false;
     }
