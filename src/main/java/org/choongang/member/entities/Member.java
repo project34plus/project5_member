@@ -3,6 +3,7 @@ package org.choongang.member.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import org.choongang.global.entities.BaseEntity;
+import org.choongang.member.constants.Authority;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class Member extends BaseEntity {
     @Column(length=15, nullable = false)
     private String mobile;
 
-    @ToString.Exclude
-    @OneToMany(mappedBy = "member")
-    private List<Authorities> authorities;
+    @Enumerated(EnumType.STRING)
+    @Column(length=10)
+    private Authority authority;
 }

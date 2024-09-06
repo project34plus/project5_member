@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.jni.FileInfo;
 import org.choongang.member.MemberInfo;
 import org.choongang.member.constants.Authority;
-import org.choongang.member.entities.Authorities;
 import org.choongang.member.entities.Member;
 import org.choongang.member.repositories.MemberRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -26,14 +26,9 @@ public class MemberInfoService implements UserDetailsService {
 
         Member member = memberRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException(username));
 
-        List<Authorities> tmp = member.getAuthorities();
-        if (tmp == null || tmp.isEmpty()) {
-            tmp = List.of(Authorities.builder().member(member).authority(Authority.USER).build());
-        }
+        Authority authority = Objects.requireNonNullElse(member.getAuthority(), Authority.USER);
 
-        List<SimpleGrantedAuthority> authorities = tmp.stream()
-                .map(a -> new SimpleGrantedAuthority(a.getAuthority().name()))
-                .toList();
+        List<SimpleGrantedAuthority> authorities =  List.of(new SimpleGrantedAuthority(authority.name()));
 
         return MemberInfo.builder()
                 .email(member.getEmail())
