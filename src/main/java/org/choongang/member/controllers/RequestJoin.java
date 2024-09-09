@@ -42,11 +42,9 @@ public class RequestJoin {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     private List<Belonging> belongings;
 
-    @NotBlank
     private String interests;
 
     @AssertTrue
