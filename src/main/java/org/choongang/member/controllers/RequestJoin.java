@@ -1,12 +1,15 @@
 package org.choongang.member.controllers;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.*;
 import lombok.Data;
+import org.choongang.member.constants.Belonging;
+import org.choongang.member.constants.Gender;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -30,6 +33,21 @@ public class RequestJoin {
 
     @NotBlank
     private String mobile;
+
+    @NotNull
+    @Past
+    private LocalDate birth;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private List<Belonging> belongings;
+
+    @NotBlank
+    private String interests;
 
     @AssertTrue
     private boolean agree;

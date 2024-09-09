@@ -43,8 +43,9 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private Gender gender;
 
-    @Column
-    private String belonging;
+    @ToString.Exclude
+    @OneToMany(mappedBy = "member")
+    private List<Belongings> belongings;
 
     @Column
     private String interests;
