@@ -5,10 +5,10 @@ import org.choongang.member.MemberUtil;
 import org.choongang.member.constants.Authority;
 import org.choongang.member.controllers.RequestJoin;
 import org.choongang.member.controllers.RequestUpdate;
-import org.choongang.member.entities.Authorities;
+
 import org.choongang.member.entities.Member;
 import org.choongang.member.exceptions.MemberNotFoundException;
-import org.choongang.member.repositories.AuthoritiesRepository;
+
 import org.choongang.member.repositories.MemberRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,7 +24,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class MemberSaveService {
     private final MemberRepository memberRepository;
-    private final AuthoritiesRepository authoritiesRepository;
+    //private final AuthoritiesRepository authoritiesRepository;
     private final PasswordEncoder passwordEncoder;
     private final MemberUtil memberUtil;
     /**
@@ -82,18 +82,18 @@ public class MemberSaveService {
 
 
         // 권한 추가, 수정 S
-        if (authorities != null) {
-            List<Authorities> items = authoritiesRepository.findByMember(member);
-            authoritiesRepository.deleteAll(items);
-            authoritiesRepository.flush();
-
-            items = authorities.stream().map(a -> Authorities.builder()
-                    .member(member)
-                    .authority(a)
-                    .build()).toList();
-
-            authoritiesRepository.saveAllAndFlush(items);
-        }
+//        if (authorities != null) {
+//            List<Authorities> items = authoritiesRepository.findByMember(member);
+//            authoritiesRepository.deleteAll(items);
+//            authoritiesRepository.flush();
+//
+//            items = authorities.stream().map(a -> Authorities.builder()
+//                    .member(member)
+//                    .authority(a)
+//                    .build()).toList();
+//
+//            authoritiesRepository.saveAllAndFlush(items);
+//        }
         // 권한 추가, 수정 E
     }
 }
