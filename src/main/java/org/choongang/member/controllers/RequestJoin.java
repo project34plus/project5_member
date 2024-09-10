@@ -33,12 +33,11 @@ public class RequestJoin {
     @Past
     private LocalDate birth;
 
-    private String gender;
+    private String gender; //커맨드 객체에는 enum 불가 -> String으로 바꿔주기
 
-    private List<String> belongings;
+    private List<String> belongings; //커맨드 객체에는 enum 불가 -> String으로 바꿔주기
 
-
-    private List<String> interests;
+    private List<String> interests; //커맨드 객체에는 enum 불가 -> String으로 바꿔주기
 
     @AssertTrue
     private boolean agree;

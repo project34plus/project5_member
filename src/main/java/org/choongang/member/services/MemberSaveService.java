@@ -40,13 +40,14 @@ public class MemberSaveService {
      */
     public void save(RequestJoin form) {
         Member member = new ModelMapper().map(form, Member.class);
-        member.setGender(Gender.valueOf(form.getGender()));
+        member.setGender(Gender.valueOf(form.getGender())); //문자열로 받은 데이터 변환
 
         String hash = passwordEncoder.encode(form.getPassword()); // BCrypt 해시화
         member.setPassword(hash);
 
         save(member, List.of(Authority.USER));
 
+        //문자열로 받은 데이터 변환
         List<Belonging> belongings = form.getBelongings() == null ? null : form.getBelongings().stream().map(Belonging::valueOf).toList();
         if (belongings != null && !belongings.isEmpty()) {
             saveBelongings(member, belongings);
