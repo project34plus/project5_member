@@ -47,8 +47,8 @@ public class MemberInfo implements UserDetails {
         return true;
     }
 
-    @Override
+    @Override //탈퇴 관리, 탈퇴일만 넣어도 권한 제한 가능
     public boolean isEnabled() {
-        return true;
+        return member.getDeletedAt() == null;
     }
 }
