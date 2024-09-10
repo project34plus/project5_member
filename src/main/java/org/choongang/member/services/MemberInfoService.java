@@ -40,7 +40,7 @@ public class MemberInfoService implements UserDetailsService {
 
         Member member = memberRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException(username));
 
-        Authority authority = Objects.requireNonNullElse(member.getAuthority(), Authority.USER);
+        Authority authority = Objects.requireNonNullElse(member.getAuthorities(), Authority.USER);
 
         List<SimpleGrantedAuthority> authorities =  List.of(new SimpleGrantedAuthority(authority.name()));
 

@@ -39,17 +39,7 @@ public class MemberSaveService {
     public void save(RequestJoin form) {
         Member member = new ModelMapper().map(form, Member.class);
         String hash = passwordEncoder.encode(form.getPassword()); // BCrypt 해시화
-        String mobile = form.getMobile();
-        if (StringUtils.hasText(mobile)) {
-            mobile = mobile.replaceAll("\\D", "");
-        }
-        member.setEmail(form.getEmail());
         member.setPassword(hash);
-        member.setUserName(form.getUserName());
-        member.setMobile(mobile);
-        member.setBirth(form.getBirth());
-        member.setGender(form.getGender());
-        member.setGid(form.getGid());
 
         save(member, List.of(Authority.USER));
 
@@ -57,6 +47,22 @@ public class MemberSaveService {
         if (belongings != null && !belongings.isEmpty()) {
             saveBelongings(member, belongings);
         }
+    }
+
+    public void save(Member member, List<Authority> authorities) {
+
+        // 휴대전화번호 숫자만 기록
+        String mobile = member.getMobile();
+        if (StringUtils.hasText(mobile)) {
+            mobile = mobile.replaceAll("\\D", "");
+            member.setMobile(mobile);
+        }
+
+        String gid = member.getGid();
+        gid = StringUtils.hasText(gid) ? gid : UUID.randomUUID().toString();
+        member.setGid(gid);
+
+        memberRepository.saveAndFlush(member);
     }
 
     /**
@@ -122,21 +128,5 @@ public class MemberSaveService {
 
     public void save(RequestUpdate form) {
         save(form, null);
-    }
-
-    public void save(Member member, List<Authority> authorities) {
-
-        // 휴대전화번호 숫자만 기록
-        String mobile = member.getMobile();
-        if (StringUtils.hasText(mobile)) {
-            mobile = mobile.replaceAll("\\D", "");
-            member.setMobile(mobile);
-        }
-
-        String gid = member.getGid();
-        gid = StringUtils.hasText(gid) ? gid : UUID.randomUUID().toString();
-        member.setGid(gid);
-
-        memberRepository.saveAndFlush(member);
     }
 }

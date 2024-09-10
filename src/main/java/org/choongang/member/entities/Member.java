@@ -53,7 +53,7 @@ public class Member extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(length=10)
-    private Authority authority;
+    private Authority authorities;
 
     @Transient
     private FileInfo profileImage;

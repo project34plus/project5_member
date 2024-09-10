@@ -33,11 +33,9 @@ public class MemberControllerTest {
     @Autowired
     private MemberSaveService saveService;
 
-    private RequestJoin form;
-
     @BeforeEach
     void init() {
-        form = new RequestJoin();
+        RequestJoin form = new RequestJoin();
         form.setEmail("user01@test.org");
         form.setPassword("_aA123456");
         form.setConfirmPassword(form.getPassword());
@@ -46,7 +44,7 @@ public class MemberControllerTest {
         form.setBirth(LocalDate.of(1990, 1, 1));
         form.setGender(Gender.MALE);
         form.setAgree(true);
-
+        System.out.println(form);
         saveService.save(form);
     }
 
