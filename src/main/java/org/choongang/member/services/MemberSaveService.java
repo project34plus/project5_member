@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.choongang.member.MemberUtil;
 import org.choongang.member.constants.Authority;
 import org.choongang.member.constants.Belonging;
+import org.choongang.member.constants.Gender;
 import org.choongang.member.controllers.RequestJoin;
 import org.choongang.member.controllers.RequestUpdate;
 import org.choongang.member.entities.BelongingId;
@@ -12,12 +13,14 @@ import org.choongang.member.entities.Member;
 import org.choongang.member.exceptions.MemberNotFoundException;
 import org.choongang.member.repositories.BelongingRepository;
 import org.choongang.member.repositories.MemberRepository;
+import org.choongang.thisis.entities.Interests;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -37,12 +40,14 @@ public class MemberSaveService {
      */
     public void save(RequestJoin form) {
         Member member = new ModelMapper().map(form, Member.class);
+        member.setGender(Gender.valueOf(form.getGender()));
+
         String hash = passwordEncoder.encode(form.getPassword()); // BCrypt 해시화
         member.setPassword(hash);
 
         save(member, List.of(Authority.USER));
 
-        List<Belonging> belongings = form.getBelongings();
+        List<Belonging> belongings = form.getBelongings() == null ? null : form.getBelongings().stream().map(Belonging::valueOf).toList();
         if (belongings != null && !belongings.isEmpty()) {
             saveBelongings(member, belongings);
         }
