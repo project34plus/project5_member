@@ -7,6 +7,7 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.choongang.member.constants.Belonging;
 import org.choongang.member.constants.Gender;
+import org.choongang.thisis.entities.Interests;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -45,7 +46,8 @@ public class RequestJoin {
     @Enumerated(EnumType.STRING)
     private List<Belonging> belongings;
 
-    private String interests;
+    @Enumerated(EnumType.STRING)
+    private List<Interests> interests;
 
     @AssertTrue
     private boolean agree;

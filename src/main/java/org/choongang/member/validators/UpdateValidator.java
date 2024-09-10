@@ -31,12 +31,12 @@ public class UpdateValidator implements Validator, PasswordValidator, MobileVali
         }
 
         if (StringUtils.hasText(password)) {
-            //1. 비밀번호, 비밀번호 확인 일치 여부
+            // 1. 비밀번호, 비밀번호 확인 일치 여부
             if (!password.equals(confirmPassword)) {
                 errors.rejectValue("confirmPassword", "Mismatch.password");
             }
 
-            // 2. 비밀번호 복잡성 체크 - 알파벳 대소문자 각각 1개 이상, 숫자 1개 이상, 특수문자 1개 이상
+            // 2. 비밀번호 복잡성 체크 - 알파벳 대소문자 각각 1개 이상, 숫자 1개 이상, 특수 문자 1개 이상
             if (!alphaCheck(password, false) || !numberCheck(password) || !specialCharsCheck(password)) {
                 errors.rejectValue("password", "Complexity");
             }

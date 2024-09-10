@@ -33,7 +33,7 @@ public class MemberAdminController {
     private final UpdateValidator updateValidator;
     private final Utils utils;
 
-    @Operation(summary = "회원목록 조회", description = "items - 조회된 회원목록, pagination - 페이징 기초 데이터", method = "GET")
+    @Operation(summary = "회원 목록 조회", method="GET", description = "items - 조회된 회원목록, pagination - 페이징 기초 데이터")
     @ApiResponse(responseCode = "200")
     @Parameters({
             @Parameter(name="page", description = "페이지 번호", example = "1"),
@@ -62,7 +62,7 @@ public class MemberAdminController {
         return new JSONData(member);
     }
 
-    @Operation(summary = "회원정보 수정", method = "PATCH")
+    @Operation(summary = "회원 정보 수정", method = "PATCH")
     @ApiResponse(responseCode = "200")
     @Parameters({
             @Parameter(name="email", required = true, description = "변경할 회원의 email(아이디로 사용되므로 변경 불가)", example="user01@test.org"),
@@ -70,6 +70,7 @@ public class MemberAdminController {
             @Parameter(name="password", description = "변경할 비밀번호, 필수는 아니므로 변경 값이 넘어오면 변경 처리함", example = "_aA123456"),
             @Parameter(name="confirmPassword", description = "password 값이 있다면 확인은 필수항목"),
             @Parameter(name="mobile", description = "휴대전화번호"),
+            @Parameter(name="belonging", description = "소속분야"),
             @Parameter(name="authority", description = "변경할 권한 목록, 필수는 아니므로 값이 있을 때만 변경 처리, 다중 권한 지원하므로 여러 권한을 배열 형태로 전송", example = "authority=USER&authority=MANAGER")
     })
     @PatchMapping("/update")

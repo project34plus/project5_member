@@ -14,6 +14,7 @@ import org.choongang.global.rests.JSONData;
 import org.choongang.member.MemberInfo;
 import org.choongang.member.entities.Member;
 import org.choongang.member.jwt.TokenProvider;
+import org.choongang.member.services.MemberDeleteService;
 import org.choongang.member.services.MemberSaveService;
 import org.choongang.member.validators.JoinValidator;
 import org.choongang.member.validators.UpdateValidator;
@@ -33,11 +34,12 @@ public class MemberController {
     private final JoinValidator joinValidator;
     private final UpdateValidator updateValidator;
     private final MemberSaveService saveService;
+    private final MemberDeleteService deleteService;
     private final TokenProvider tokenProvider;
     private final Utils utils;
 
-    /* 로그인한 회원 정보 조회 */
-    @Operation(summary = "인증(로그인)한 회원 정보 조회")
+    /* 로그인 한 회원 정보 조회 */
+    @Operation(summary = "인증(로그인)한 회원 정보 조회", method = "GET")
     @ApiResponse(responseCode = "200", description = "로그인 한 회원 정보 조회")
     @GetMapping("/account")
     @PreAuthorize("isAuthenticated()")
@@ -47,9 +49,9 @@ public class MemberController {
         return new JSONData(member);
     }
 
-    /* 회원가입 */
-    @Operation(summary = "회원가입")
-    @ApiResponse(responseCode = "201", description = "회원가입 성공시 201")
+    /* 회원 가입 */
+    @Operation(summary = "회원 가입", method = "POST")
+    @ApiResponse(responseCode = "201", description = "회원 가입 성공시 201")
     @Parameters({
             @Parameter(name = "email", required = true, description = "이메일"),
             @Parameter(name = "password", required = true, description = "비밀번호"),
@@ -58,12 +60,12 @@ public class MemberController {
             @Parameter(name = "mobile", description = "휴대전화번호, 형식 검증 있음"),
             @Parameter(name = "birth", required = true, description = "생년월일"),
             @Parameter(name = "gender", required = true, description = "성별"),
-            @Parameter(name = "belonging", description = "소속분야"),
-            @Parameter(name = "interests", description = "관심분야"),
-            @Parameter(name = "agree", required = true, description = "회원가입 약관 동의")
+            @Parameter(name = "belonging", description = "소속 분야"),
+            @Parameter(name = "interests", description = "관심 분야"),
+            @Parameter(name = "agree", required = true, description = "회원 가입 약관 동의")
     })
     @PostMapping("/account")
-    // /account 쪽에 Post 방식으로 접근하면 -> 회원가입
+    // /account 쪽에 Post 방식으로 접근하면 -> 회원 가입
     public ResponseEntity join(@RequestBody @Valid RequestJoin form, Errors errors) {
         // 회원 가입 정보는 JSON 데이터로 전달 -> @RequestBody
         joinValidator.validate(form, errors);
@@ -94,13 +96,13 @@ public class MemberController {
         }
 
         String token = tokenProvider.createToken(form.getEmail(), form.getPassword());
-        // 이상이 없으면 JSONData로 토큰 발급
-        return new JSONData(token);
+
+        return new JSONData(token);  // 이상이 없으면 JSONData로 토큰 발급
     }
 
     /* 회원 정보 수정 */
-    @Operation(summary = "회원 정보 수정")
-    @ApiResponse(responseCode = "200", description = "로그인 한 회원 정보 수정")
+    @Operation(summary = "회원 정보 수정", method = "PATCH")
+    @ApiResponse(responseCode = "201", description = "로그인 한 회원 정보 수정")
     @PutMapping("/account/update")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity update(@RequestBody @Valid RequestUpdate form, Errors errors) {
@@ -123,7 +125,7 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> withdraw() {
 
-        saveService.withdraw();
+        deleteService.withdraw();
 
         return ResponseEntity.ok().build();
     }

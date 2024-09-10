@@ -2,6 +2,8 @@ package org.choongang.member.controllers;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import org.choongang.member.constants.Belonging;
+import org.choongang.thisis.entities.Interests;
 
 import java.util.List;
 
@@ -19,4 +21,8 @@ public class RequestUpdate {
     private String mobile;
 
     private List<String> authority;
+
+    private List<Belonging> belongings;
+
+    private List<Interests> interests;
 }

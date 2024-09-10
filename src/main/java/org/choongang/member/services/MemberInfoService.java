@@ -5,6 +5,7 @@ import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.choongang.file.services.FileInfoService;
 import org.choongang.global.ListData;
 import org.choongang.global.Pagination;
 import org.choongang.member.MemberInfo;
@@ -31,6 +32,7 @@ public class MemberInfoService implements UserDetailsService {
     private final MemberRepository memberRepository;
     private final JPAQueryFactory queryFactory;
     private final HttpServletRequest request;
+    private final FileInfoService fileInfoService;
 
     /* 회원 정보가 필요할 때마다 호출 되는 메서드 */
     @Override
@@ -55,6 +57,7 @@ public class MemberInfoService implements UserDetailsService {
                 .authorities(authorities)
                 .build();
     }
+
 
     /**
      * 회원 목록 조회
