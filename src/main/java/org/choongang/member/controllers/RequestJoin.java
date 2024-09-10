@@ -35,11 +35,11 @@ public class RequestJoin {
     @NotBlank
     private String mobile;
 
-    @NotBlank
+    @NotNull
     @Past
     private LocalDate birth;
 
-    @NotBlank
+    @NotNull
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
