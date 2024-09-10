@@ -6,6 +6,7 @@ import org.choongang.member.constants.Authority;
 import org.choongang.member.constants.Belonging;
 import org.choongang.member.controllers.RequestJoin;
 import org.choongang.member.controllers.RequestUpdate;
+import org.choongang.member.entities.BelongingId;
 import org.choongang.member.entities.Belongings;
 import org.choongang.member.entities.Member;
 import org.choongang.member.exceptions.MemberNotFoundException;
@@ -26,7 +27,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MemberSaveService {
     private final MemberRepository memberRepository;
-    //private final AuthoritiesRepository authoritiesRepository;
     private final PasswordEncoder passwordEncoder;
     private final MemberUtil memberUtil;
     private final BelongingRepository belongingRepository;
@@ -125,21 +125,5 @@ public class MemberSaveService {
         member.setGid(gid);
 
         memberRepository.saveAndFlush(member);
-
-
-        // 권한 추가, 수정 S
-//        if (authorities != null) {
-//            List<Authorities> items = authoritiesRepository.findByMember(member);
-//            authoritiesRepository.deleteAll(items);
-//            authoritiesRepository.flush();
-//
-//            items = authorities.stream().map(a -> Authorities.builder()
-//                    .member(member)
-//                    .authority(a)
-//                    .build()).toList();
-//
-//            authoritiesRepository.saveAllAndFlush(items);
-//        }
-        // 권한 추가, 수정 E
     }
 }

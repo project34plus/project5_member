@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.apache.tomcat.jni.FileInfo;
 import org.choongang.global.entities.BaseEntity;
+import org.choongang.member.constants.Authority;
 import org.choongang.member.constants.Gender;
 
 import java.time.LocalDate;
@@ -50,9 +51,9 @@ public class Member extends BaseEntity {
     @Column
     private String interests;
 
-    @ToString.Exclude
-    @OneToMany(mappedBy = "member")
-    private List<Authorities> authorities;
+    @Enumerated(EnumType.STRING)
+    @Column(length=10)
+    private Authority authority;
 
     @Transient
     private FileInfo profileImage;

@@ -11,7 +11,6 @@ import org.choongang.global.Pagination;
 import org.choongang.member.MemberInfo;
 import org.choongang.member.constants.Authority;
 import org.choongang.member.controllers.MemberSearch;
-import org.choongang.member.entities.Authorities;
 import org.choongang.member.entities.Member;
 import org.choongang.member.entities.QMember;
 import org.choongang.member.repositories.MemberRepository;
@@ -24,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -40,15 +40,9 @@ public class MemberInfoService implements UserDetailsService {
 
         Member member = memberRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException(username));
 
-        List<Authorities> tmp = member.getAuthorities();
-        if (tmp == null || tmp.isEmpty()) {
-            tmp = List.of(Authorities.builder().member(member).authority(Authority.USER).build());
-        }
+        Authority authority = Objects.requireNonNullElse(member.getAuthority(), Authority.USER);
 
-        List<SimpleGrantedAuthority> authorities = tmp.stream()
-                .map(a -> new SimpleGrantedAuthority(a.getAuthority().name()))
-                .toList();
-        //Authority enum의 name 메서드를 호출하여 문자열로 변환
+        List<SimpleGrantedAuthority> authorities =  List.of(new SimpleGrantedAuthority(authority.name()));
 
         return MemberInfo.builder()
                 .email(member.getEmail())
@@ -94,7 +88,7 @@ public class MemberInfoService implements UserDetailsService {
         /* 검색 처리 E */
 
         List<Member> items = queryFactory.selectFrom(member)
-                .leftJoin(member.authorities)
+//                .leftJoin(member.authority)
                 .fetchJoin()
                 .where(andBuilder)
                 .offset(offset)
