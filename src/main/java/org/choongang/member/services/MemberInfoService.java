@@ -1,7 +1,6 @@
 package org.choongang.member.services;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.jni.FileInfo;
 import org.choongang.member.MemberInfo;
 import org.choongang.member.constants.Authority;
 import org.choongang.member.entities.Member;
