@@ -6,7 +6,6 @@ import org.choongang.member.constants.Authority;
 import org.choongang.member.constants.Belonging;
 import org.choongang.member.controllers.RequestJoin;
 import org.choongang.member.controllers.RequestUpdate;
-import org.choongang.member.entities.Authorities;
 import org.choongang.member.entities.BelongingId;
 import org.choongang.member.entities.Belongings;
 import org.choongang.member.entities.Member;
@@ -33,6 +32,7 @@ public class MemberSaveService {
     private final PasswordEncoder passwordEncoder;
     private final MemberUtil memberUtil;
     private final BelongingRepository belongingRepository;
+
     /**
      * 회원 가입 처리
      *
@@ -41,7 +41,17 @@ public class MemberSaveService {
     public void save(RequestJoin form) {
         Member member = new ModelMapper().map(form, Member.class);
         String hash = passwordEncoder.encode(form.getPassword()); // BCrypt 해시화
+        String mobile = form.getMobile();
+        if (StringUtils.hasText(mobile)) {
+            mobile = mobile.replaceAll("\\D", "");
+        }
+        member.setEmail(form.getEmail());
         member.setPassword(hash);
+        member.setUserName(form.getUserName());
+        member.setMobile(mobile);
+        member.setBirth(form.getBirth());
+        member.setGender(form.getGender());
+        member.setGid(form.getGid());
 
         save(member, List.of(Authority.USER));
 
@@ -53,6 +63,7 @@ public class MemberSaveService {
 
     /**
      * 회원 정보 수정
+     *
      * @param form
      */
     public void save(RequestUpdate form, List<Authority> authorities) {
@@ -87,6 +98,7 @@ public class MemberSaveService {
         }
     }
 
+
     public void saveBelongings(Member member, List<Belonging> belongings) {
 
         if (member == null) {
@@ -97,8 +109,8 @@ public class MemberSaveService {
             throw new IllegalArgumentException("Member does not exist");
         }
 
-        belongings.forEach(i->{
-            BelongingId id = new BelongingId(member,i);
+        belongings.forEach(i -> {
+            BelongingId id = new BelongingId(member, i);
             belongingRepository.deleteById(id);
         });
 
@@ -128,21 +140,5 @@ public class MemberSaveService {
         member.setGid(gid);
 
         memberRepository.saveAndFlush(member);
-
-
-        // 권한 추가, 수정 S
-        if (authorities != null) {
-            List<Authorities> items = authoritiesRepository.findByMember(member);
-            authoritiesRepository.deleteAll(items);
-            authoritiesRepository.flush();
-
-            items = authorities.stream().map(a -> Authorities.builder()
-                    .member(member)
-                    .authority(a)
-                    .build()).toList();
-
-            authoritiesRepository.saveAllAndFlush(items);
-        }
-        // 권한 추가, 수정 E
     }
 }

@@ -15,6 +15,5 @@ public class RequestLogin {
     private boolean success = true;
     private String code;
     private String defaultMessage;
-
     private String redirectUrl;
 }
