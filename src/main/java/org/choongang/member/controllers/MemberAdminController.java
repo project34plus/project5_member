@@ -14,6 +14,7 @@ import org.choongang.global.rests.JSONData;
 import org.choongang.member.MemberInfo;
 import org.choongang.member.constants.Authority;
 import org.choongang.member.entities.Member;
+import org.choongang.member.services.MemberDeleteService;
 import org.choongang.member.services.MemberInfoService;
 import org.choongang.member.services.MemberSaveService;
 import org.choongang.member.validators.UpdateValidator;
@@ -30,6 +31,7 @@ public class MemberAdminController {
 
     private final MemberInfoService memberInfoService;
     private final MemberSaveService memberSaveService;
+    private final MemberDeleteService memberDeleteService;
     private final UpdateValidator updateValidator;
     private final Utils utils;
 
@@ -63,7 +65,7 @@ public class MemberAdminController {
     }
 
     @Operation(summary = "회원 정보 수정", method = "PATCH")
-    @ApiResponse(responseCode = "200")
+    @ApiResponse(responseCode = "201", description = "회원 정보 수정")
     @Parameters({
             @Parameter(name="email", required = true, description = "변경할 회원의 email(아이디로 사용되므로 변경 불가)", example="user01@test.org"),
             @Parameter(name="userName", required = true, description = "회원명", example = "사용자01"),
@@ -71,6 +73,7 @@ public class MemberAdminController {
             @Parameter(name="confirmPassword", description = "password 값이 있다면 확인은 필수항목"),
             @Parameter(name="mobile", description = "휴대전화번호"),
             @Parameter(name="belonging", description = "소속분야"),
+            @Parameter(name="interests", description = "관심분야"),
             @Parameter(name="authority", description = "변경할 권한 목록, 필수는 아니므로 값이 있을 때만 변경 처리, 다중 권한 지원하므로 여러 권한을 배열 형태로 전송", example = "authority=USER&authority=MANAGER")
     })
     @PatchMapping("/update")
@@ -85,4 +88,10 @@ public class MemberAdminController {
         memberSaveService.save(form, authorities);
     }
 
+    @Operation(summary = "회원 탈퇴", method = "PATCH")
+    @ApiResponse(responseCode = "200", description = "회원 탈퇴")
+    @PatchMapping("/withdraw")
+    public void withdraw() {
+        memberDeleteService.withdraw();
+    }
 }

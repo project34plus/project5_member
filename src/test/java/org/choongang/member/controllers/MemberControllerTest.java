@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.nio.charset.Charset;
@@ -19,7 +18,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @SpringBootTest
-@ActiveProfiles("test")
+//@ActiveProfiles("test")
 @AutoConfigureMockMvc
 public class MemberControllerTest {
 
@@ -31,27 +30,27 @@ public class MemberControllerTest {
 
     @Autowired
     private MemberSaveService saveService;
-
+    private RequestJoin form;
     @BeforeEach
     void init() {
-        RequestJoin form = new RequestJoin();
-        form.setEmail("user01@test.org");
-        form.setPassword("_aA123456");
-        form.setConfirmPassword(form.getPassword());
-        form.setMobile("010-1000-1000");
-        form.setUserName("사용자01");
-        form.setBirth(LocalDate.of(1990, 1, 1));
-        form.setGender("MALE");
-        form.setAgree(true);
-        System.out.println(form);
-        saveService.save(form);
+        for (long i = 1L; i <= 10L; i++) {
+            form = new RequestJoin();
+            form.setEmail("user" + i + "@test.org");
+            form.setPassword("_aA12345678");
+            form.setConfirmPassword(form.getPassword());
+            form.setUserName("사용자" + i);
+            form.setMobile("010-1000-1000");
+            form.setBirth(LocalDate.of(1990, 1, 1));
+            form.setGender("MALE");
+            form.setAgree(true);
+            System.out.println(form);
+            saveService.save(form);
+        }
     }
 
     @Test
     @DisplayName("회원 가입 테스트")
     void joinTest() throws Exception {
-        RequestJoin form = new RequestJoin();
-
         String params = om.writeValueAsString(form);
 
         mockMvc.perform(post("/account")

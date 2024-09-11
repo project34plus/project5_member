@@ -7,6 +7,7 @@ import org.apache.tomcat.jni.FileInfo;
 import org.choongang.global.entities.BaseEntity;
 import org.choongang.member.constants.Authority;
 import org.choongang.member.constants.Gender;
+import org.choongang.thisis.entities.Interests;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -48,8 +49,9 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member")
     private List<Belongings> belongings;
 
-    @Column
-    private String interests;
+    @ToString.Exclude
+    @OneToMany(mappedBy = "member")
+    private List<Interests> interests;
 
     @Enumerated(EnumType.STRING)
     @Column(length=10)

@@ -1,37 +1,22 @@
 package org.choongang.member.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import lombok.Builder;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.choongang.member.constants.Belonging;
-
-import java.io.Serializable;
 
 @Data
 @Entity
-@Builder
 @IdClass(BelongingId.class)
 @NoArgsConstructor
-public class Belongings implements Serializable {
+public class Belongings {
     @Id
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_seq")
-    private Member member;
+    @Column(length = 30)
+    private String id; //학문별 분류 코드
 
     @Id
-    @Column(length = 20)
-    @Enumerated(EnumType.STRING)
-    private Belonging belonging;
-
-    public Belonging getBelongings() {
-        return belonging;
-    }
-
-    public Belongings(Member member, Belonging belonging) {
-        this.member = member;
-        this.belonging = belonging;
-    }
+    @Column(length = 80)
+    private String email; // 회원 이메일 주소
 }
