@@ -1,7 +1,6 @@
 package org.choongang.member.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.choongang.member.constants.Gender;
 import org.choongang.member.services.MemberSaveService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -42,7 +41,7 @@ public class MemberControllerTest {
         form.setMobile("010-1000-1000");
         form.setUserName("사용자01");
         form.setBirth(LocalDate.of(1990, 1, 1));
-        form.setGender(Gender.MALE);
+        form.setGender("MALE");
         form.setAgree(true);
         System.out.println(form);
         saveService.save(form);

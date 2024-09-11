@@ -1,6 +1,5 @@
 package org.choongang.member.jwt;
 
-import org.choongang.member.constants.Gender;
 import org.choongang.member.controllers.RequestJoin;
 import org.choongang.member.services.MemberSaveService;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +30,7 @@ public class TokenProviderTest {
         form.setMobile("010-1000-1000");
         form.setUserName("사용자01");
         form.setBirth(LocalDate.of(1990, 1, 1));
-        form.setGender(Gender.MALE);
+        form.setGender("MALE");
         form.setAgree(true);
 
         saveService.save(form);
