@@ -43,7 +43,7 @@ public class MemberAdminController {
             @Parameter(name="sopt", description = "검색옵션", example = "ALL"),
             @Parameter(name="skey", description = "검색키워드"),
     })
-    @GetMapping
+    @GetMapping("/info/list")
     public JSONData list(@ModelAttribute MemberSearch search) {
 
         ListData data = memberInfoService.getList(search);

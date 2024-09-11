@@ -14,10 +14,25 @@ public class InterestSaveService {
     private final ApiRequest apiRequest;
 
     /**
-     * 관심 분야 저장 / 수정
+     * 회원 관심사 조회
      */
-    public Interests save(List<Interests> _interests, String email) {
+    public Interests interestInfo (String email) {
         ApiRequest result = apiRequest.request("/interest/" + email, "thesis-service");
+
+        if (result.getStatus().is2xxSuccessful() && result.getData().isSuccess()) {
+            return result.toObj(Interests.class);
+        }
+
+        return null;
+    }
+
+
+    /**
+     * 회원 관심사 수정
+     */
+
+    private Interests update(List<String> _interests, String email) {
+        ApiRequest result = apiRequest.request("/interest/update/" + email, "thesis-service");
 
         if (result.getStatus().is2xxSuccessful() && result.getData().isSuccess()) {
             return result.toObj(Interests.class);
