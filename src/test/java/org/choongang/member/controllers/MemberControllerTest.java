@@ -1,6 +1,9 @@
 package org.choongang.member.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.choongang.member.constants.Job;
+import org.choongang.member.entities.Member;
+import org.choongang.member.services.MemberInfoService;
 import org.choongang.member.services.MemberSaveService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,7 +16,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.nio.charset.Charset;
 import java.time.LocalDate;
+import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
@@ -31,6 +36,9 @@ public class MemberControllerTest {
     @Autowired
     private MemberSaveService saveService;
     private RequestJoin form;
+    @Autowired
+    private MemberInfoService memberInfoService;
+
     @BeforeEach
     void init() {
         for (long i = 1L; i <= 10L; i++) {
@@ -40,6 +48,7 @@ public class MemberControllerTest {
             form.setConfirmPassword(form.getPassword());
             form.setUserName("사용자" + i);
             form.setMobile("010-1000-1000");
+            form.setJob("PROFESSOR");
             form.setBirth(LocalDate.of(1990, 1, 1));
             form.setGender("MALE");
             form.setAgree(true);
@@ -58,5 +67,13 @@ public class MemberControllerTest {
                         .characterEncoding(Charset.forName("UTF-8"))
                         .content(params))
                 .andDo(print());
+    }
+
+    @Test
+    @DisplayName("직업으로 회원 목록 조회 테스트")
+    public void testGetUsersByJob() {
+        Job job = Job.PROFESSOR;
+        List<Member> member = memberInfoService.getUsersByJob(job);
+        assertEquals(10, member.size());
     }
 }

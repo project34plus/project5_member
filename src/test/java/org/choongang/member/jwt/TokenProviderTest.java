@@ -28,6 +28,7 @@ public class TokenProviderTest {
         form.setPassword("_aA123456");
         form.setConfirmPassword(form.getPassword());
         form.setMobile("010-1000-1000");
+        form.setJob("PROFESSOR");
         form.setUserName("사용자01");
         form.setBirth(LocalDate.of(1990, 1, 1));
         form.setGender("MALE");
