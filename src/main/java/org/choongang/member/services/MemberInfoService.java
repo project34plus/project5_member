@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -149,5 +150,10 @@ public class MemberInfoService implements UserDetailsService {
         Optional<Member> memberOptional = memberRepository.findByEmail(email);
         return memberOptional.map(Member::getJob)
                 .orElse(Job.GENERAL_MEMBER);
+    }
+
+    /* 이름과 생년월일로 아이디 찾기 */
+    public Optional<String> getEmail(String userName, LocalDate birth) {
+        return memberRepository.findEmail(userName, birth);
     }
 }

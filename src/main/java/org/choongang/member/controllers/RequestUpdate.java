@@ -20,6 +20,8 @@ public class RequestUpdate {
 
     private String mobile;
 
+    private String fields;
+
     private String job;
 
     private String gender;

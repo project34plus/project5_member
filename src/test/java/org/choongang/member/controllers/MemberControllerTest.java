@@ -1,10 +1,10 @@
 package org.choongang.member.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.choongang.member.constants.Gender;
 import org.choongang.member.constants.Job;
 import org.choongang.member.entities.Member;
 import org.choongang.member.repositories.MemberRepository;
-import org.choongang.member.services.MemberInfoService;
 import org.choongang.member.services.MemberSaveService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,14 +14,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.nio.charset.Charset;
 import java.time.LocalDate;
-import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 //@ActiveProfiles("test")
@@ -39,11 +39,8 @@ public class MemberControllerTest {
 
     @Autowired
     private MemberRepository memberRepository;
-
-    @Autowired
-    private MemberInfoService memberInfoService;
-
     private RequestJoin form;
+    private RequestUpdate updateForm;
 
     @BeforeEach
     void init() {
@@ -61,6 +58,12 @@ public class MemberControllerTest {
             System.out.println(form);
             saveService.save(form);
         }
+
+        updateForm = new RequestUpdate();
+        updateForm.setUserName("새로운 사용자");
+        updateForm.setMobile("010-9999-9999");
+        updateForm.setJob("LIBRARIAN");
+        updateForm.setGender("FEMALE");
     }
 
     @Test
@@ -76,20 +79,39 @@ public class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("직업으로 회원 목록 조회 테스트")
-    public void testGetUsersByJob() {
-        Job job = Job.PROFESSOR;
-        List<Member> member = memberInfoService.getUsersByJob(job);
-        assertEquals(10, member.size());
-        System.out.println(member);
+    @DisplayName("회원 정보 수정 테스트")
+    void updateMemberTest() throws Exception {
+        String email = "user1@test.org";
+
+        String updateParams = om.writeValueAsString(updateForm);
+        ;
+        mockMvc.perform(MockMvcRequestBuilders.put("/account/update")
+                        .param("email", updateParams)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(Charset.forName("UTF-8"))
+                        .content(updateParams))
+                .andDo(print());
+
+        Member updatedMember = memberRepository.findByEmail(email).orElseThrow();
+        assert "새로운 사용자".equals(updatedMember.getUserName());
+        assert "010-9999-9999".equals(updatedMember.getMobile());
+        assert Job.LIBRARIAN.equals(updatedMember.getJob());
+        assert Gender.FEMALE.equals(updatedMember.getGender());
+        System.out.println(updatedMember);
     }
 
     @Test
-    @DisplayName("회원 이메일로 직업 조회 테스트")
-    void testGetJobByEmailFound() {
-            String email = "user1@test.org";
-            Job job = memberInfoService.getJobByEmail(email);
-            assertEquals(Job.PROFESSOR, job);
-        System.out.println(job);
+    @DisplayName("회원 탈퇴 테스트")
+    void withdrawTest() throws Exception {
+        String email = "user1@test.org";
+
+        mockMvc.perform(MockMvcRequestBuilders.patch("/account/withdraw")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(Charset.forName("UTF-8")))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        Member member = memberRepository.findByEmail(email).orElseThrow();
+        assert member.getDeletedAt() != null;
     }
 }

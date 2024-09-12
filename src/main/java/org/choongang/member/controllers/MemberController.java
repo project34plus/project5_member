@@ -1,5 +1,6 @@
 package org.choongang.member.controllers;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -28,7 +29,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Tag(name = "Member", description = "회원 API")
 @RestController
@@ -127,6 +130,7 @@ public class MemberController {
         updateValidator.validate(form, errors);
 
         if (errors.hasErrors()) {
+            System.out.println(errors.getAllErrors());
             throw new BadRequestException(utils.getErrorMessages(errors));
         }
 
@@ -164,5 +168,11 @@ public class MemberController {
     public ResponseEntity<Job> getJobByEmail(@RequestParam String email) {
         Job job = infoService.getJobByEmail(email);
         return ResponseEntity.ok(job);
+    }
+
+    /* 이름과 생년월일로 아이디 찾기 */
+    @GetMapping("/email")
+    public Optional<String> getEmail(@RequestParam String userName, @RequestParam @JsonFormat(pattern="yyyy-MM-dd") LocalDate birth) {
+        return infoService.getEmail(userName, birth);
     }
 }
