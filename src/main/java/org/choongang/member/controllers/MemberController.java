@@ -170,7 +170,9 @@ public class MemberController {
         return ResponseEntity.ok(job);
     }
 
-    /* 이름과 생년월일로 아이디 찾기 */
+    /* 이름과 생년월일로 이메일 찾기 */
+    @Operation(summary = "이름과 생년월일로 이메일 찾기", method = "GET")
+    @ApiResponse(responseCode = "200", description = "이메일 조회")
     @GetMapping("/email")
     public Optional<String> getEmail(@RequestParam String userName, @RequestParam @JsonFormat(pattern="yyyy-MM-dd") LocalDate birth) {
         return infoService.getEmail(userName, birth);
