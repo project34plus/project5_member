@@ -3,9 +3,9 @@ package org.choongang.member.controllers;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+
 @Data
 public class RequestLogin {
-
     @NotBlank
     private String email;
 
@@ -15,6 +15,5 @@ public class RequestLogin {
     private boolean success = true;
     private String code;
     private String defaultMessage;
-
     private String redirectUrl;
 }

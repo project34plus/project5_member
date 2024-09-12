@@ -20,7 +20,7 @@ public class MemberUtil {
 
     public boolean isAdmin() {
         if (isLogin()) {
-            return getMember().getAuthority() == Authority.ADMIN;
+            return getMember().getAuthorities() == Authority.ADMIN;
         }
         return false;
     }

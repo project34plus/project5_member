@@ -2,14 +2,12 @@ package org.choongang.member.services;
 
 import lombok.RequiredArgsConstructor;
 import org.choongang.member.MemberUtil;
-import org.choongang.member.constants.Authority;
 import org.choongang.member.entities.Member;
 import org.choongang.member.repositories.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @Transactional
@@ -25,7 +23,6 @@ public class MemberDeleteService {
         if (memberUtil.isLogin()) {
             member.setDeletedAt(LocalDateTime.now());
         }
-
         memberRepository.save(member);
     }
 }
