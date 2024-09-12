@@ -3,6 +3,7 @@ package org.choongang.member.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.choongang.member.constants.Job;
 import org.choongang.member.entities.Member;
+import org.choongang.member.repositories.MemberRepository;
 import org.choongang.member.services.MemberInfoService;
 import org.choongang.member.services.MemberSaveService;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,9 +36,14 @@ public class MemberControllerTest {
 
     @Autowired
     private MemberSaveService saveService;
-    private RequestJoin form;
+
+    @Autowired
+    private MemberRepository memberRepository;
+
     @Autowired
     private MemberInfoService memberInfoService;
+
+    private RequestJoin form;
 
     @BeforeEach
     void init() {
@@ -75,5 +81,11 @@ public class MemberControllerTest {
         Job job = Job.PROFESSOR;
         List<Member> member = memberInfoService.getUsersByJob(job);
         assertEquals(10, member.size());
+    }
+
+    @Test
+    @DisplayName("회원 이메일로 직업 조회 테스트")
+    public void testGetJobByEmailNotFound() {
+        String email = "user1@test.org";
     }
 }

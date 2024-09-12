@@ -28,6 +28,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -47,7 +48,7 @@ public class MemberInfoService implements UserDetailsService {
 
         Authority authority = Objects.requireNonNullElse(member.getAuthorities(), Authority.USER);
 
-        List<SimpleGrantedAuthority> authorities =  List.of(new SimpleGrantedAuthority(authority.name()));
+        List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(authority.name()));
 
         List<FileInfo> files = fileInfoService.getList(member.getGid());
         // if (files != null && !files.isEmpty()) member.setProfileImage(files.get(0));
@@ -103,8 +104,7 @@ public class MemberInfoService implements UserDetailsService {
             } else if (sopt.equals("email")) { // 이메일로 검색
                 condition = member.email.contains(skey);
 
-            }
-            else if (sopt.equals("userName")) { // 회원명
+            } else if (sopt.equals("userName")) { // 회원명
                 condition = member.userName.contains(skey);
 
             } else if (sopt.equals("job")) {
@@ -127,7 +127,7 @@ public class MemberInfoService implements UserDetailsService {
                 .fetch();
 
         long total = memberRepository.count(andBuilder);
-        Pagination pagination = new Pagination(page, (int)total, 10, limit, request);
+        Pagination pagination = new Pagination(page, (int) total, 10, limit, request);
 
         return new ListData<>(items, pagination);
     }
@@ -135,12 +135,19 @@ public class MemberInfoService implements UserDetailsService {
     public void addInfo(Member member) {
         List<FileInfo> files = fileInfoService.getList(member.getGid());
         if (files != null && !files.isEmpty()) {
-           // member.setProfileImage(files.get(0));
+            // member.setProfileImage(files.get(0));
         }
     }
 
-    /* 직업으로 검색 */
+    /* 직업으로 회원 목록 검색 */
     public List<Member> getUsersByJob(Job job) {
         return memberRepository.findByJob(job);
+    }
+
+    /* 회원 이메일로 직업 검색 */
+    public Job getJobByEmail(String email) {
+        Optional<Member> memberOptional = memberRepository.findByEmail(email);
+        return memberOptional.map(Member::getJob)
+                .orElse(Job.GENERAL_MEMBER);
     }
 }

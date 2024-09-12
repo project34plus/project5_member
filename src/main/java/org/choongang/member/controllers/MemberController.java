@@ -111,14 +111,14 @@ public class MemberController {
     @Operation(summary = "회원 정보 수정", method = "PATCH")
     @ApiResponse(responseCode = "201", description = "로그인 한 회원 정보 수정")
     @Parameters({
-            @Parameter(name="email", required = true, description = "변경할 회원의 email(아이디로 사용되므로 변경 불가)", example="user01@test.org"),
-            @Parameter(name="userName", required = true, description = "회원명", example = "사용자01"),
-            @Parameter(name="password", description = "변경할 비밀번호, 필수는 아니므로 변경 값이 넘어오면 변경 처리함", example = "_aA123456"),
-            @Parameter(name="confirmPassword", description = "password 값이 있다면 확인은 필수항목"),
-            @Parameter(name="mobile", description = "휴대전화번호"),
-            @Parameter(name="job", description = "신분"),
-            @Parameter(name="belonging", description = "소속분야"),
-            @Parameter(name="interests", description = "관심분야"),
+            @Parameter(name = "email", required = true, description = "변경할 회원의 email(아이디로 사용되므로 변경 불가)", example = "user01@test.org"),
+            @Parameter(name = "userName", required = true, description = "회원명", example = "사용자01"),
+            @Parameter(name = "password", description = "변경할 비밀번호, 필수는 아니므로 변경 값이 넘어오면 변경 처리함", example = "_aA123456"),
+            @Parameter(name = "confirmPassword", description = "password 값이 있다면 확인은 필수항목"),
+            @Parameter(name = "mobile", description = "휴대전화번호"),
+            @Parameter(name = "job", description = "신분"),
+            @Parameter(name = "belonging", description = "소속분야"),
+            @Parameter(name = "interests", description = "관심분야"),
     })
     @PutMapping("/account/update")
     @PreAuthorize("isAuthenticated()")
@@ -149,11 +149,20 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    /* 직업으로 회원 조회 */
-    @Operation(summary = "직업으로 회원 조회", method = "GET")
+    /* 직업으로 회원목록 조회 */
+    @Operation(summary = "직업으로 회원목록 조회", method = "GET")
     @ApiResponse(responseCode = "200", description = "회원 조회")
-    @GetMapping("/job")
+    @GetMapping("/job-member")
     public List<Member> getUsersByJob(@RequestParam Job job) {
         return infoService.getUsersByJob(job);
+    }
+
+    /* 회원 이메일로 직업 조회 */
+    @Operation(summary = "회원 이메일로 직업 조회", method = "GET")
+    @ApiResponse(responseCode = "200", description = "직업 조회")
+    @GetMapping("/member-job")
+    public ResponseEntity<Job> getJobByEmail(@RequestParam String email) {
+        Job job = infoService.getJobByEmail(email);
+        return ResponseEntity.ok(job);
     }
 }
