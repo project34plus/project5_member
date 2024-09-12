@@ -12,6 +12,7 @@ import org.choongang.global.Utils;
 import org.choongang.global.exceptions.BadRequestException;
 import org.choongang.global.rests.JSONData;
 import org.choongang.member.MemberInfo;
+import org.choongang.member.MemberUtil;
 import org.choongang.member.constants.Authority;
 import org.choongang.member.entities.Member;
 import org.choongang.member.services.MemberDeleteService;
@@ -34,6 +35,7 @@ public class MemberAdminController {
     private final MemberDeleteService memberDeleteService;
     private final UpdateValidator updateValidator;
     private final Utils utils;
+    private final MemberUtil memberUtil;
 
     @Operation(summary = "회원 목록 조회", method="GET", description = "items - 조회된 회원목록, pagination - 페이징 기초 데이터")
     @ApiResponse(responseCode = "200")
@@ -72,12 +74,13 @@ public class MemberAdminController {
             @Parameter(name="password", description = "변경할 비밀번호, 필수는 아니므로 변경 값이 넘어오면 변경 처리함", example = "_aA123456"),
             @Parameter(name="confirmPassword", description = "password 값이 있다면 확인은 필수항목"),
             @Parameter(name="mobile", description = "휴대전화번호"),
+            @Parameter(name="job", description = "신분"),
             @Parameter(name="belonging", description = "소속분야"),
             @Parameter(name="interests", description = "관심분야"),
             @Parameter(name="authority", description = "변경할 권한 목록, 필수는 아니므로 값이 있을 때만 변경 처리, 다중 권한 지원하므로 여러 권한을 배열 형태로 전송", example = "authority=USER&authority=MANAGER")
     })
     @PatchMapping("/update")
-    public void update(@RequestBody @Valid RequestUpdate form, Errors errors) {
+    public JSONData update(@RequestBody @Valid RequestUpdate form, Errors errors) {
         updateValidator.validate(form, errors);
         if (errors.hasErrors()) {
             throw new BadRequestException(utils.getErrorMessages(errors));
@@ -86,6 +89,10 @@ public class MemberAdminController {
         List<Authority> authorities = form.getAuthority() == null ? null : form.getAuthority().stream().map(Authority::valueOf).toList();
 
         memberSaveService.save(form, authorities);
+
+        Member member = memberUtil.getMember();
+
+        return new JSONData(member);
     }
 
     @Operation(summary = "회원 탈퇴", method = "PATCH")

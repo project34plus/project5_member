@@ -1,5 +1,6 @@
 package org.choongang.member.controllers;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -12,6 +13,7 @@ import java.util.UUID;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RequestJoin {
 
+    /* 회원공통 */
     private String gid = UUID.randomUUID().toString();
 
     @NotBlank
@@ -32,7 +34,11 @@ public class RequestJoin {
 
     @NotNull
     @Past
+    @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate birth;
+
+    @NotBlank
+    private String job;
 
     private String gender; // 커맨드 객체에는 enum상수 사용 불가 -> String으로 바꿔주기
 

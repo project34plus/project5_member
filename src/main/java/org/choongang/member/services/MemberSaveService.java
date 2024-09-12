@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.choongang.member.MemberUtil;
 import org.choongang.member.constants.Authority;
 import org.choongang.member.constants.Gender;
+import org.choongang.member.constants.Job;
 import org.choongang.member.controllers.RequestJoin;
 import org.choongang.member.controllers.RequestUpdate;
 import org.choongang.member.entities.Authorities;
@@ -42,11 +43,6 @@ public class MemberSaveService {
         String hash = passwordEncoder.encode(form.getPassword()); // BCrypt 해시화
         member.setPassword(hash);
 
-//        List<Belongings> belongings = form.getBelongings() == null ? null : form.getBelongings().stream().map(Belonging::valueOf).toList();
-//        if (belongings != null && !belongings.isEmpty()) {
-//            saveBelonging(member, belongings);
-//        }
-
         save(member, List.of(Authority.USER));
     }
 
@@ -72,6 +68,7 @@ public class MemberSaveService {
      * @param form
      */
     public void save(RequestUpdate form, List<Authority> authorities) {
+
         String email = null;
         if (memberUtil.isAdmin() && StringUtils.hasText(form.getEmail())) {
             email = form.getEmail();
@@ -89,6 +86,8 @@ public class MemberSaveService {
         }
         member.setUserName(form.getUserName());
         member.setMobile(mobile);
+        member.setJob(form.getJob() == null ? null : Job.valueOf(form.getJob()));
+        member.setGender(form.getGender() == null ? null : Gender.valueOf(form.getGender()));
 
         if (StringUtils.hasText(password)) {
             String hash = passwordEncoder.encode(password);
@@ -108,36 +107,8 @@ public class MemberSaveService {
             authoritiesRepository.saveAllAndFlush(items);
         }
 
-//        List<Belonging> belongings = form.getBelongings();
-//        if (belongings != null && !belongings.isEmpty()) {
-//            saveBelongings(member, belongings);
-//        }
-
         save(member, authorities);
     }
-
-
-//    public void saveBelongings(Member member, List<Belonging> belongings) {
-//
-//        if (member == null) {
-//            throw new IllegalArgumentException("Member cannot be null");
-//        }
-//
-//        if (!memberRepository.existsById(member.getSeq())) {
-//            throw new IllegalArgumentException("Member does not exist");
-//        }
-//
-//        belongings.forEach(i -> {
-//            BelongingId id = new BelongingId(member, i);
-//            belongingRepository.deleteById(id);
-//        });
-//
-//        List<Belongings> newBelongings = belongings.stream()
-//                .map(belonging -> new Belongings(member, belonging))
-//                .collect(Collectors.toList());
-//
-//        belongingRepository.saveAllAndFlush(newBelongings);
-//    }
 
 
     public void save(RequestUpdate form) {

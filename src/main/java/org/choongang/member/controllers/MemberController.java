@@ -12,9 +12,12 @@ import org.choongang.global.Utils;
 import org.choongang.global.exceptions.BadRequestException;
 import org.choongang.global.rests.JSONData;
 import org.choongang.member.MemberInfo;
+import org.choongang.member.MemberUtil;
+import org.choongang.member.constants.Job;
 import org.choongang.member.entities.Member;
 import org.choongang.member.jwt.TokenProvider;
 import org.choongang.member.services.MemberDeleteService;
+import org.choongang.member.services.MemberInfoService;
 import org.choongang.member.services.MemberSaveService;
 import org.choongang.member.validators.JoinValidator;
 import org.choongang.member.validators.UpdateValidator;
@@ -25,6 +28,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Tag(name = "Member", description = "회원 API")
 @RestController
 @RequestMapping
@@ -34,9 +39,11 @@ public class MemberController {
     private final JoinValidator joinValidator;
     private final UpdateValidator updateValidator;
     private final MemberSaveService saveService;
+    private final MemberInfoService infoService;
     private final MemberDeleteService deleteService;
     private final TokenProvider tokenProvider;
     private final Utils utils;
+    private final MemberUtil memberUtil;
 
     /* 로그인 한 회원 정보 조회 */
     @Operation(summary = "인증(로그인)한 회원 정보 조회", method = "GET")
@@ -109,12 +116,13 @@ public class MemberController {
             @Parameter(name="password", description = "변경할 비밀번호, 필수는 아니므로 변경 값이 넘어오면 변경 처리함", example = "_aA123456"),
             @Parameter(name="confirmPassword", description = "password 값이 있다면 확인은 필수항목"),
             @Parameter(name="mobile", description = "휴대전화번호"),
+            @Parameter(name="job", description = "신분"),
             @Parameter(name="belonging", description = "소속분야"),
             @Parameter(name="interests", description = "관심분야"),
     })
     @PutMapping("/account/update")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity update(@RequestBody @Valid RequestUpdate form, Errors errors) {
+    public JSONData update(@RequestBody @Valid RequestUpdate form, Errors errors) {
 
         updateValidator.validate(form, errors);
 
@@ -124,7 +132,9 @@ public class MemberController {
 
         saveService.save(form);
 
-        return ResponseEntity.ok().build();
+        Member member = memberUtil.getMember();
+
+        return new JSONData(member);
     }
 
     /* 회원 탈퇴 */
@@ -137,5 +147,13 @@ public class MemberController {
         deleteService.withdraw();
 
         return ResponseEntity.ok().build();
+    }
+
+    /* 직업으로 회원 조회 */
+    @Operation(summary = "직업으로 회원 조회", method = "GET")
+    @ApiResponse(responseCode = "200", description = "회원 조회")
+    @GetMapping("/job")
+    public List<Member> getUsersByJob(@RequestParam Job job) {
+        return infoService.getUsersByJob(job);
     }
 }

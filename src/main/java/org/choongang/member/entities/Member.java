@@ -10,6 +10,7 @@ import org.apache.tomcat.jni.FileInfo;
 import org.choongang.global.entities.BaseEntity;
 import org.choongang.member.constants.Authority;
 import org.choongang.member.constants.Gender;
+import org.choongang.member.constants.Job;
 import org.choongang.thisis.entities.Interests;
 
 import java.time.LocalDate;
@@ -56,6 +57,10 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(length=10)
     private Authority authorities;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length=10)
+    private Job job;
 
     @Transient
     private FileInfo profileImage;
