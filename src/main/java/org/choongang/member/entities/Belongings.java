@@ -12,7 +12,8 @@ import lombok.NoArgsConstructor;
 @IdClass(BelongingId.class)
 @NoArgsConstructor
 public class Belongings {
-    @Id
+
+@Id
     @Column(length = 30)
     private String id; //학문별 분류 코드
 

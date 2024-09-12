@@ -2,23 +2,17 @@ package org.choongang.member.services;
 
 import lombok.RequiredArgsConstructor;
 import org.choongang.global.Utils;
-import org.choongang.global.exceptions.BadRequestException;
-import org.choongang.member.entities.Belongings;
-import org.choongang.member.repositories.BelongingRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class BelongingSaveService {
-    private final BelongingRepository belongingRepository;
     private final Utils utils;
 
     // 소속 분야 저장
+    /*
     public void saveBelonging(List<String> _belongings, String email) {
         if (!StringUtils.hasText(email)) {
             throw new BadRequestException(utils.getMessage("NotBlank.Email"));
@@ -35,5 +29,5 @@ public class BelongingSaveService {
     private void saveBelongings(List<String> belonging, String email) {
         belonging.forEach(i -> {
         });
-    }
+    }*/
 }

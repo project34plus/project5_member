@@ -2,7 +2,10 @@ package org.choongang.member.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.tomcat.jni.FileInfo;
 import org.choongang.global.entities.BaseEntity;
 import org.choongang.member.constants.Authority;
@@ -45,12 +48,9 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private Gender gender;
 
-    @ToString.Exclude
-    @OneToMany(mappedBy = "member")
-    private List<Belongings> belongings;
+    private String fields;
 
-    @ToString.Exclude
-    @OneToMany(mappedBy = "member")
+    @Transient
     private List<Interests> interests;
 
     @Enumerated(EnumType.STRING)

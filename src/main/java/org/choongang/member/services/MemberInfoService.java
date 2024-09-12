@@ -5,6 +5,8 @@ import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.choongang.file.entities.FileInfo;
+import org.choongang.file.services.FileInfoService;
 import org.choongang.global.ListData;
 import org.choongang.global.Pagination;
 import org.choongang.member.MemberInfo;
@@ -13,6 +15,8 @@ import org.choongang.member.controllers.MemberSearch;
 import org.choongang.member.entities.Member;
 import org.choongang.member.entities.QMember;
 import org.choongang.member.repositories.MemberRepository;
+import org.choongang.thisis.entities.Interests;
+import org.choongang.thisis.services.InterestSaveService;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -31,6 +35,8 @@ public class MemberInfoService implements UserDetailsService {
     private final MemberRepository memberRepository;
     private final JPAQueryFactory queryFactory;
     private final HttpServletRequest request;
+    private final FileInfoService fileInfoService;
+    private final InterestSaveService interestSaveService;
 
     /* 회원 정보가 필요할 때마다 호출 되는 메서드 */
     @Override
@@ -41,6 +47,12 @@ public class MemberInfoService implements UserDetailsService {
         Authority authority = Objects.requireNonNullElse(member.getAuthorities(), Authority.USER);
 
         List<SimpleGrantedAuthority> authorities =  List.of(new SimpleGrantedAuthority(authority.name()));
+
+        List<FileInfo> files = fileInfoService.getList(member.getGid());
+        // if (files != null && !files.isEmpty()) member.setProfileImage(files.get(0));
+
+        List<Interests> interests = interestSaveService.interestInfo(member.getEmail());
+        member.setInterests(interests);
 
         return MemberInfo.builder()
                 .email(member.getEmail())
