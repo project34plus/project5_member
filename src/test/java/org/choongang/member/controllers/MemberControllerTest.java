@@ -81,11 +81,15 @@ public class MemberControllerTest {
         Job job = Job.PROFESSOR;
         List<Member> member = memberInfoService.getUsersByJob(job);
         assertEquals(10, member.size());
+        System.out.println(member);
     }
 
     @Test
     @DisplayName("회원 이메일로 직업 조회 테스트")
-    public void testGetJobByEmailNotFound() {
-        String email = "user1@test.org";
+    void testGetJobByEmailFound() {
+            String email = "user1@test.org";
+            Job job = memberInfoService.getJobByEmail(email);
+            assertEquals(Job.PROFESSOR, job);
+        System.out.println(job);
     }
 }
