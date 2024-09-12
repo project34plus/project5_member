@@ -1,9 +1,8 @@
 package org.choongang.member.controllers;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
-import org.choongang.member.constants.Belonging;
-import org.choongang.thisis.entities.Interests;
 
 import java.util.List;
 
@@ -14,15 +13,20 @@ public class RequestUpdate {
     @NotBlank
     private String userName;
 
+    @Size(min=8)
     private String password;
 
     private String confirmPassword;
 
     private String mobile;
 
+    private String job;
+
+    private String gender;
+
     private List<String> authority;
 
-    private List<Belonging> belongings;
+    private List<String> belongings;
 
-    private List<Interests> interests;
+    private List<String> interests;
 }
