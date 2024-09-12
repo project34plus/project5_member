@@ -2,10 +2,16 @@ package org.choongang.member.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.tomcat.jni.FileInfo;
 import org.choongang.global.entities.BaseEntity;
+import org.choongang.member.constants.Authority;
 import org.choongang.member.constants.Gender;
+import org.choongang.member.constants.Job;
+import org.choongang.thisis.entities.Interests;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,7 +23,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Member extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long seq;
 
     @Column(length=45, nullable=false)
@@ -43,16 +49,18 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private Gender gender;
 
-    @ToString.Exclude
-    @OneToMany(mappedBy = "member")
-    private List<Belongings> belongings;
+    private String fields;
 
-    @Column
-    private String interests;
+    @Transient
+    private List<Interests> interests;
 
-    @ToString.Exclude
-    @OneToMany(mappedBy = "member")
-    private List<Authorities> authorities;
+    @Enumerated(EnumType.STRING)
+    @Column(length=10)
+    private Authority authorities;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length=10)
+    private Job job;
 
     @Transient
     private FileInfo profileImage;
