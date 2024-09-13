@@ -44,7 +44,7 @@ public class RequestJoin {
 
     private String gender; // 커맨드 객체에는 enum상수 사용 불가 -> String으로 바꿔주기
 
-    private List<String> belongings; // 커맨드 객체에는 enum상수 사용 불가 -> String으로 바꿔주기
+    private String fields; // 커맨드 객체에는 enum상수 사용 불가 -> String으로 바꿔주기
 
     private List<String> interests; // 커맨드 객체에는 enum상수 사용 불가 -> String으로 바꿔주기
 
