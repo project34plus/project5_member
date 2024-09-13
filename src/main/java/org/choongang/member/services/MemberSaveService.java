@@ -66,13 +66,12 @@ public class MemberSaveService {
         String gid = member.getGid();
         gid = StringUtils.hasText(gid) ? gid : UUID.randomUUID().toString();
         member.setGid(gid);
-        System.out.println("member check:" + member);
-        System.out.println(apiRequest.request("/interest/update/" + member.getEmail(), "thesis-service", HttpMethod.PATCH, member.getInterests()));
-//        ApiRequest result = apiRequest.request("/interest/update/" + member.getEmail(), "thesis-service", HttpMethod.PATCH, member.getInterests());
-//        if (!result.getStatus().is2xxSuccessful()) {
-//            System.out.println(result);
-//            throw new InterestSaveFailException();
-//        }
+
+        ApiRequest result = apiRequest.request("/interest/update/" + member.getEmail(), "thesis-service", HttpMethod.PATCH, member.getInterests());
+        if (!result.getStatus().is2xxSuccessful()) {
+            System.out.println(result);
+            throw new InterestSaveFailException();
+        }
         memberRepository.saveAndFlush(member);
 
     }
@@ -133,7 +132,7 @@ public class MemberSaveService {
     private void interestsSave(Member member, List<String> interests) {
         List<Interests> targetInterests = new ArrayList<>();
         for (String interest : interests) {
-            Interests _interest = new Interests(member.getEmail(), interest);
+            Interests _interest = new Interests(interest, member.getEmail());
             targetInterests.add(_interest);
         }
 
