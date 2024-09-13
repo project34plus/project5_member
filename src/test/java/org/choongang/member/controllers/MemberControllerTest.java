@@ -19,6 +19,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.nio.charset.Charset;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -56,6 +58,10 @@ public class MemberControllerTest {
             form.setBirth(LocalDate.of(1990, 1, 1));
             form.setGender("MALE");
             form.setAgree(true);
+            List<String> _interests = new ArrayList<>();
+            _interests.add("interest1");
+            _interests.add("interest2");
+            form.setInterests(_interests);
             System.out.println(form);
             saveService.save(form);
         }
@@ -86,9 +92,7 @@ public class MemberControllerTest {
         String email = "user1@test.org";
 
         String updateParams = om.writeValueAsString(updateForm);
-        ;
         mockMvc.perform(MockMvcRequestBuilders.put("/account/update")
-                        .param("email", updateParams)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(Charset.forName("UTF-8"))
                         .content(updateParams))
