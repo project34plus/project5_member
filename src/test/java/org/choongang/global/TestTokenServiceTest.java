@@ -13,6 +13,7 @@ public class TestTokenServiceTest {
 
     @Test
     void test1() {
-        tokenService.getToken(Authority.USER);
+        String token = tokenService.getToken(Authority.USER);
+        System.out.println(token);
     }
 }

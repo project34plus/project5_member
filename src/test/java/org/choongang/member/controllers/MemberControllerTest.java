@@ -2,6 +2,8 @@ package org.choongang.member.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.choongang.global.rests.ApiRequest;
+import org.choongang.global.tests.TestTokenService;
+import org.choongang.member.constants.Authority;
 import org.choongang.member.entities.Member;
 import org.choongang.member.repositories.MemberRepository;
 import org.choongang.member.services.MemberSaveService;
@@ -35,6 +37,8 @@ public class MemberControllerTest {
 
     @Autowired
     private ObjectMapper om;
+
+    private TestTokenService tokenService;
 
     @Autowired
     private ApiRequest apiRequest;
@@ -80,8 +84,15 @@ public class MemberControllerTest {
     void joinTest() throws Exception {
         String params = om.writeValueAsString(form);
 
+        apiRequest.setTest(true);
+        ApiRequest result = apiRequest.request("/account", "member-service");
+
+        tokenService.setApiRequest(apiRequest);
+        String token =  tokenService.getToken(Authority.USER);
+
         mockMvc.perform(post("/account")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authentication", "Bearer " + token)
                         .characterEncoding(Charset.forName("UTF-8"))
                         .content(params))
                 .andDo(print());
@@ -89,15 +100,19 @@ public class MemberControllerTest {
 
     @Test
     @DisplayName("회원 정보 수정 테스트")
-   // @WithUserDetails(value = "user01@test.org")
     void updateMemberTest() throws Exception {
+        apiRequest.setTest(true);
+        ApiRequest result = apiRequest.request("/account", "member-service");
+
         String email = "user1@test.org";
 
-       // String token = apiRequest.request("/")
+        tokenService.setApiRequest(apiRequest);
+        String token =  tokenService.getToken(Authority.USER);
 
         String updateParams = om.writeValueAsString(updateForm);
         mockMvc.perform(MockMvcRequestBuilders.put("/account/update")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authentication", "Bearer " + token)
                         .characterEncoding(Charset.forName("UTF-8"))
                         .content(updateParams))
                 .andDo(print());
@@ -114,15 +129,29 @@ public class MemberControllerTest {
     @Test
     @DisplayName("회원 탈퇴 테스트")
     void withdrawTest() throws Exception {
+        apiRequest.setTest(true);
+        ApiRequest result = apiRequest.request("/account", "member-service");
+
         String email = "user1@test.org";
+
+        tokenService.setApiRequest(apiRequest);
+        String token =  tokenService.getToken(Authority.USER);
 
         mockMvc.perform(MockMvcRequestBuilders.patch("/account/withdraw")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authentication", "Bearer " + token)
                         .characterEncoding(Charset.forName("UTF-8")))
                 .andDo(print())
                 .andExpect(status().isOk());
 
         Member member = memberRepository.findByEmail(email).orElseThrow();
         assert member.getDeletedAt() != null;
+    }
+
+    @Test
+    @DisplayName("예시 테스트")
+    void example() {
+        apiRequest.setTest(true);
+        ApiRequest result = apiRequest.request("/account", "member-service");
     }
 }
