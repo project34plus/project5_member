@@ -1,13 +1,9 @@
 package org.choongang.member.controllers;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
 import lombok.Data;
-import org.choongang.member.constants.Belonging;
-import org.choongang.member.constants.Gender;
-import org.choongang.thisis.entities.Interests;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,6 +13,7 @@ import java.util.UUID;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RequestJoin {
 
+    /* 회원공통 */
     private String gid = UUID.randomUUID().toString();
 
     @NotBlank
@@ -37,17 +34,17 @@ public class RequestJoin {
 
     @NotNull
     @Past
+    @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate birth;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
+    @NotBlank
+    private String job;
 
-    @Enumerated(EnumType.STRING)
-    private List<Belonging> belongings;
+    private String gender; // 커맨드 객체에는 enum상수 사용 불가 -> String으로 바꿔주기
 
-    @Enumerated(EnumType.STRING)
-    private List<Interests> interests;
+    private String fields; // 커맨드 객체에는 enum상수 사용 불가 -> String으로 바꿔주기
+
+    private List<String> interests; // 커맨드 객체에는 enum상수 사용 불가 -> String으로 바꿔주기
 
     @AssertTrue
     private boolean agree;
