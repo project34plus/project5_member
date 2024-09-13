@@ -135,7 +135,6 @@ public class MemberSaveService {
             Interests _interest = new Interests(interest, member.getEmail());
             targetInterests.add(_interest);
         }
-
         member.setInterests(targetInterests);
     }
 
