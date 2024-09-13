@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.tomcat.jni.FileInfo;
+import org.choongang.file.entities.FileInfo;
 import org.choongang.global.entities.BaseEntity;
 import org.choongang.member.constants.Authority;
 import org.choongang.member.constants.Gender;
@@ -26,19 +26,19 @@ public class Member extends BaseEntity {
     @GeneratedValue
     private Long seq;
 
-    @Column(length=45, nullable=false)
+    @Column(length = 45, nullable = false)
     private String gid;
 
-    @Column(length=65, unique = true, nullable = false)
+    @Column(length = 65, unique = true, nullable = false)
     private String email;
 
-    @Column(length=65, nullable = false)
+    @Column(length = 65, nullable = false)
     private String password;
 
-    @Column(length=40, nullable = false)
+    @Column(length = 40, nullable = false)
     private String userName;
 
-    @Column(length=15, nullable = false)
+    @Column(length = 15, nullable = false)
     private String mobile;
 
     @Column(nullable = false)
@@ -49,17 +49,21 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private Gender gender;
 
-    private String fields;
+    @Column(length = 20)
+    private String memMajor;//전공
+
+    @Column(length = 20)
+    private String memMinor;//부전공
 
     @Transient
     private List<Interests> interests;
 
     @Enumerated(EnumType.STRING)
-    @Column(length=10)
+    @Column(length = 10)
     private Authority authorities;
 
     @Enumerated(EnumType.STRING)
-    @Column(length=10)
+    @Column(length = 10)
     private Job job;
 
     @Transient

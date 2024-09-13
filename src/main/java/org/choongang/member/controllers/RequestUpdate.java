@@ -20,11 +20,13 @@ public class RequestUpdate {
 
     private String mobile;
 
+    private String fields;
+
     private String job;
 
     private String gender;
 
-    private List<String> authority;
+    private String authority;
 
     private List<String> belongings;
 
