@@ -47,7 +47,8 @@ public class ApiRequest {
             try {
                 String body = om.writeValueAsString(data);
                 HttpEntity<String> request = new HttpEntity<>(body, headers);
-
+                System.out.println("body : " + body);
+                System.out.println("request : " + request);
                 this.response = restTemplate.exchange(URI.create(requestUrl), method, request, JSONData.class);
 
             } catch (JsonProcessingException e) {
@@ -67,6 +68,7 @@ public class ApiRequest {
 
     /**
      * 응답 코드
+     *
      * @return
      */
     public HttpStatusCode getStatus() {
@@ -85,8 +87,8 @@ public class ApiRequest {
      * JSON으로 응답 데이터 변환
      *
      * @param clazz
-     * @return
      * @param <T>
+     * @return
      */
 
     public <T> T toObj(Class<T> clazz) {
@@ -107,8 +109,8 @@ public class ApiRequest {
      * JSON으로 응답 데이터 변환
      *
      * @param typeReference
-     * @return
      * @param <T>
+     * @return
      */
     public <T> List<T> toList(TypeReference<List<T>> typeReference) {
 
@@ -139,6 +141,6 @@ public class ApiRequest {
      * @return
      */
     public String toString() {
-        return (String)jsonData.getData();
+        return (String) jsonData.getData();
     }
 }
