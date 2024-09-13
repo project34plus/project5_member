@@ -13,7 +13,6 @@ import org.choongang.global.exceptions.BadRequestException;
 import org.choongang.global.rests.JSONData;
 import org.choongang.member.MemberInfo;
 import org.choongang.member.MemberUtil;
-import org.choongang.member.constants.Authority;
 import org.choongang.member.entities.Member;
 import org.choongang.member.services.MemberDeleteService;
 import org.choongang.member.services.MemberInfoService;
@@ -21,8 +20,6 @@ import org.choongang.member.services.MemberSaveService;
 import org.choongang.member.validators.UpdateValidator;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Tag(name="MemberAdmin", description = "회원 관리 API")
 @RestController
@@ -86,9 +83,8 @@ public class MemberAdminController {
             throw new BadRequestException(utils.getErrorMessages(errors));
         }
 
-        List<Authority> authorities = form.getAuthority() == null ? null : form.getAuthority().stream().map(Authority::valueOf).toList();
 
-        memberSaveService.save(form, authorities);
+        memberSaveService.save(form);
 
         Member member = memberUtil.getMember();
 

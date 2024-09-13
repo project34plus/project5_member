@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.choongang.global.ListData;
 import org.choongang.global.Utils;
 import org.choongang.global.exceptions.BadRequestException;
 import org.choongang.global.rests.JSONData;
@@ -27,8 +28,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Tag(name = "Member", description = "회원 API")
 @RestController
@@ -138,31 +137,40 @@ public class MemberController {
     }
 
     /* 회원 탈퇴 */
-    @Operation(summary = "회원 탈퇴")
+    @Operation(summary = "회원 탈퇴", method = "PATCH")
     @ApiResponse(responseCode = "200", description = "회원 탈퇴")
     @PatchMapping("/account/withdraw")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Void> withdraw() {
-
+    public void withdraw() {
+        // 구현 잘했습니다~
         deleteService.withdraw();
-
-        return ResponseEntity.ok().build();
     }
 
-    /* 직업으로 회원목록 조회 */
-    @Operation(summary = "직업으로 회원목록 조회", method = "GET")
+    /* 직업으로 회원 목록 조회 */
+    @Operation(summary = "직업으로 회원 목록 조회", method = "GET")
     @ApiResponse(responseCode = "200", description = "회원 조회")
     @GetMapping("/job-member")
-    public List<Member> getUsersByJob(@RequestParam Job job) {
-        return infoService.getUsersByJob(job);
+    public JSONData getUsersByJob(MemberSearch search) {
+       ListData<Member> items = infoService.getList(search);
+
+       return new JSONData(items);
     }
 
     /* 회원 이메일로 직업 조회 */
     @Operation(summary = "회원 이메일로 직업 조회", method = "GET")
     @ApiResponse(responseCode = "200", description = "직업 조회")
     @GetMapping("/member-job")
-    public ResponseEntity<Job> getJobByEmail(@RequestParam String email) {
+    public JSONData getJobByEmail(@RequestParam String email) {
         Job job = infoService.getJobByEmail(email);
-        return ResponseEntity.ok(job);
+
+        return new JSONData(new String[] {job.name(), job.getTitle()});
+    }
+
+    /* 직업 목록 조회 */
+    @Operation(summary = "직업 종류 목록", method = "GET")
+    @ApiResponse(responseCode = "200", description = "직업 목록 조회")
+    @GetMapping("/job")
+    public JSONData getJobs() {
+        return new JSONData(Job.getList());
     }
 }
