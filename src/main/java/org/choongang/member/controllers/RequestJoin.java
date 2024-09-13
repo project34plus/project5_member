@@ -46,6 +46,7 @@ public class RequestJoin {
     @NotBlank
     private String job;
 
+    @NotBlank
     private String gender; // 커맨드 객체에는 enum상수 사용 불가 -> String으로 바꿔주기
 
     private String memMajor; // 커맨드 객체에는 enum상수 사용 불가 -> String으로 바꿔주기

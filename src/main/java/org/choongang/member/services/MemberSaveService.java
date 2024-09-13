@@ -11,7 +11,6 @@ import org.choongang.member.controllers.RequestUpdate;
 import org.choongang.member.entities.Member;
 import org.choongang.member.exceptions.InterestSaveFailException;
 import org.choongang.member.exceptions.MemberNotFoundException;
-import org.choongang.member.repositories.BelongingRepository;
 import org.choongang.member.repositories.MemberRepository;
 import org.choongang.thisis.entities.Interests;
 import org.modelmapper.ModelMapper;
@@ -33,7 +32,6 @@ public class MemberSaveService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final MemberUtil memberUtil;
-    private final BelongingRepository belongingRepository;
     private final ApiRequest apiRequest;
 
     /**
@@ -68,14 +66,16 @@ public class MemberSaveService {
         Authority authority = Objects.requireNonNullElse(member.getAuthorities(), Authority.USER);
         member.setAuthorities(authority);
 
-        ApiRequest result = apiRequest.request("/interest/update/" + member.getEmail(), "thesis-service", HttpMethod.PATCH, member.getInterests());
-        if (!result.getStatus().is2xxSuccessful()) {
-            System.out.println(result);
-            throw new InterestSaveFailException();
+        if (member.getInterests() != null) {
+            ApiRequest result = apiRequest.request("/interest/update/" + member.getEmail(), "thesis-service", HttpMethod.PATCH, member.getInterests());
+            if (!result.getStatus().is2xxSuccessful()) {
+                System.out.println(result);
+                throw new InterestSaveFailException();
+            }
+
+            memberRepository.saveAndFlush(member);
+
         }
-
-        memberRepository.saveAndFlush(member);
-
     }
 
     /**
@@ -129,6 +129,4 @@ public class MemberSaveService {
         }
         member.setInterests(targetInterests);
     }
-
-
 }
