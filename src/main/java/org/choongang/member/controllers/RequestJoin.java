@@ -32,8 +32,6 @@ public class RequestJoin {
     @NotBlank
     private String mobile;
 
-    private String fields;
-
     @NotNull
     @Past
     @JsonFormat(pattern="yyyy-MM-dd")
