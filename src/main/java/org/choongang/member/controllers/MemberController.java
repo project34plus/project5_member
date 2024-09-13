@@ -28,8 +28,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Tag(name = "Member", description = "회원 API")
 @RestController
 @RequestMapping
@@ -127,7 +125,6 @@ public class MemberController {
         updateValidator.validate(form, errors);
 
         if (errors.hasErrors()) {
-            System.out.println(errors.getAllErrors());
             throw new BadRequestException(utils.getErrorMessages(errors));
         }
 
@@ -151,19 +148,22 @@ public class MemberController {
     }
 
     /* 직업으로 회원목록 조회 */
+    /*
     @Operation(summary = "직업으로 회원목록 조회", method = "GET")
     @ApiResponse(responseCode = "200", description = "회원 조회")
     @GetMapping("/job-member")
-    public List<Member> getUsersByJob(@RequestParam Job job) {
+    public List<Member> getUsersByJob(@RequestParam("job") String job) {
         return infoService.getUsersByJob(job);
     }
+    */
 
     /* 회원 이메일로 직업 조회 */
     @Operation(summary = "회원 이메일로 직업 조회", method = "GET")
     @ApiResponse(responseCode = "200", description = "직업 조회")
     @GetMapping("/member-job")
-    public ResponseEntity<Job> getJobByEmail(@RequestParam String email) {
+    public JSONData getJobByEmail(@RequestParam String email) {
         Job job = infoService.getJobByEmail(email);
-        return ResponseEntity.ok(job);
+
+        return new JSONData(new String[] {job.name(), job.getTitle()});
     }
 }

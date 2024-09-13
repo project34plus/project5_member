@@ -51,7 +51,7 @@ public class MemberInfoService implements UserDetailsService {
         List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(authority.name()));
 
         List<FileInfo> files = fileInfoService.getList(member.getGid());
-        if (files != null && !files.isEmpty()) member.setProfileImage(files.get(0));
+        // if (files != null && !files.isEmpty()) member.setProfileImage(files.get(0));
 
         List<Interests> interests = interestSaveService.interestInfo(member.getEmail());
         member.setInterests(interests);
@@ -115,6 +115,10 @@ public class MemberInfoService implements UserDetailsService {
             if (condition != null) andBuilder.and(condition);
         }
 
+        List<String> job = search.getJob();
+        if (job != null && !job.isEmpty()) {
+            ///andBuilder.and(member.job.in(job));
+        }
 
         /* 검색 처리 E */
 
@@ -135,7 +139,7 @@ public class MemberInfoService implements UserDetailsService {
     public void addInfo(Member member) {
         List<FileInfo> files = fileInfoService.getList(member.getGid());
         if (files != null && !files.isEmpty()) {
-            member.setProfileImage(files.get(0));
+            // member.setProfileImage(files.get(0));
         }
     }
 
