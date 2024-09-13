@@ -8,11 +8,9 @@ import org.choongang.member.constants.Gender;
 import org.choongang.member.constants.Job;
 import org.choongang.member.controllers.RequestJoin;
 import org.choongang.member.controllers.RequestUpdate;
-import org.choongang.member.entities.Authorities;
 import org.choongang.member.entities.Member;
 import org.choongang.member.exceptions.InterestSaveFailException;
 import org.choongang.member.exceptions.MemberNotFoundException;
-import org.choongang.member.repositories.AuthoritiesRepository;
 import org.choongang.member.repositories.BelongingRepository;
 import org.choongang.member.repositories.MemberRepository;
 import org.choongang.thisis.entities.Interests;
@@ -25,6 +23,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -35,7 +34,6 @@ public class MemberSaveService {
     private final PasswordEncoder passwordEncoder;
     private final MemberUtil memberUtil;
     private final BelongingRepository belongingRepository;
-    private final AuthoritiesRepository authoritiesRepository;
     private final ApiRequest apiRequest;
 
     /**
@@ -51,10 +49,10 @@ public class MemberSaveService {
         interestsSave(member, form.getInterests());
         System.out.println("form : " + form);
         System.out.println(member);
-        save(member, List.of(Authority.USER));
+        save(member);
     }
 
-    public void save(Member member, List<Authority> authorities) {
+    public void save(Member member) {
 
         // 휴대전화번호 숫자만 기록
         String mobile = member.getMobile();
@@ -67,11 +65,15 @@ public class MemberSaveService {
         gid = StringUtils.hasText(gid) ? gid : UUID.randomUUID().toString();
         member.setGid(gid);
 
+        Authority authority = Objects.requireNonNullElse(member.getAuthorities(), Authority.USER);
+        member.setAuthorities(authority);
+
         ApiRequest result = apiRequest.request("/interest/update/" + member.getEmail(), "thesis-service", HttpMethod.PATCH, member.getInterests());
         if (!result.getStatus().is2xxSuccessful()) {
             System.out.println(result);
             throw new InterestSaveFailException();
         }
+
         memberRepository.saveAndFlush(member);
 
     }
@@ -81,7 +83,7 @@ public class MemberSaveService {
      *
      * @param form
      */
-    public void save(RequestUpdate form, List<Authority> authorities) {
+    public Member save(RequestUpdate form) {
 
         String email = null;
         if (memberUtil.isAdmin() && StringUtils.hasText(form.getEmail())) {
@@ -108,26 +110,16 @@ public class MemberSaveService {
             member.setPassword(hash);
         }
 
-        if (authorities != null) {
-            List<Authorities> items = authoritiesRepository.findByMember(member);
-            authoritiesRepository.deleteAll(items);
-            authoritiesRepository.flush();
+        Authority authority = StringUtils.hasText(form.getAuthority()) ? Authority.valueOf(form.getAuthority()) : Authority.USER;
+        member.setAuthorities(authority);
 
-            items = authorities.stream().map(a -> Authorities.builder()
-                    .member(member)
-                    .authority(a)
-                    .build()).toList();
+        save(member);
 
-            authoritiesRepository.saveAllAndFlush(items);
-        }
-
-        save(member, authorities);
+        return member;
     }
 
 
-    public void save(RequestUpdate form) {
-        save(form, null);
-    }
+
 
     private void interestsSave(Member member, List<String> interests) {
         List<Interests> targetInterests = new ArrayList<>();

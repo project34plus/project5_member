@@ -26,7 +26,7 @@ public class RequestUpdate {
 
     private String gender;
 
-    private List<String> authority;
+    private String authority;
 
     private List<String> belongings;
 
