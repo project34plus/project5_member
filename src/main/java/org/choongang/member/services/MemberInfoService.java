@@ -26,7 +26,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -52,7 +51,7 @@ public class MemberInfoService implements UserDetailsService {
         List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(authority.name()));
 
         List<FileInfo> files = fileInfoService.getList(member.getGid());
-        // if (files != null && !files.isEmpty()) member.setProfileImage(files.get(0));
+        if (files != null && !files.isEmpty()) member.setProfileImage(files.get(0));
 
         List<Interests> interests = interestSaveService.interestInfo(member.getEmail());
         member.setInterests(interests);
@@ -136,7 +135,7 @@ public class MemberInfoService implements UserDetailsService {
     public void addInfo(Member member) {
         List<FileInfo> files = fileInfoService.getList(member.getGid());
         if (files != null && !files.isEmpty()) {
-            // member.setProfileImage(files.get(0));
+            member.setProfileImage(files.get(0));
         }
     }
 
@@ -150,10 +149,5 @@ public class MemberInfoService implements UserDetailsService {
         Optional<Member> memberOptional = memberRepository.findByEmail(email);
         return memberOptional.map(Member::getJob)
                 .orElse(Job.GENERAL_MEMBER);
-    }
-
-    /* 이름과 생년월일로 아이디 찾기 */
-    public Optional<String> getEmail(String userName, LocalDate birth) {
-        return memberRepository.findEmail(userName, birth);
     }
 }
