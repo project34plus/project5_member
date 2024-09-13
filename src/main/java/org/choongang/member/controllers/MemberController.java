@@ -137,7 +137,7 @@ public class MemberController {
     }
 
     /* 회원 탈퇴 */
-    @Operation(summary = "회원 탈퇴")
+    @Operation(summary = "회원 탈퇴", method = "PATCH")
     @ApiResponse(responseCode = "200", description = "회원 탈퇴")
     @PatchMapping("/account/withdraw")
     @PreAuthorize("isAuthenticated()")
@@ -146,8 +146,8 @@ public class MemberController {
         deleteService.withdraw();
     }
 
-    /* 직업으로 회원목록 조회 */
-    @Operation(summary = "직업으로 회원목록 조회", method = "GET")
+    /* 직업으로 회원 목록 조회 */
+    @Operation(summary = "직업으로 회원 목록 조회", method = "GET")
     @ApiResponse(responseCode = "200", description = "회원 조회")
     @GetMapping("/job-member")
     public JSONData getUsersByJob(MemberSearch search) {
@@ -166,7 +166,9 @@ public class MemberController {
         return new JSONData(new String[] {job.name(), job.getTitle()});
     }
 
+    /* 직업 목록 조회 */
     @Operation(summary = "직업 종류 목록", method = "GET")
+    @ApiResponse(responseCode = "200", description = "직업 목록 조회")
     @GetMapping("/job")
     public JSONData getJobs() {
         return new JSONData(Job.getList());

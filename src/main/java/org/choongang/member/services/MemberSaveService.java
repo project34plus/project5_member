@@ -119,8 +119,6 @@ public class MemberSaveService {
     }
 
 
-
-
     private void interestsSave(Member member, List<String> interests) {
         List<Interests> targetInterests = new ArrayList<>();
         for (String interest : interests) {
