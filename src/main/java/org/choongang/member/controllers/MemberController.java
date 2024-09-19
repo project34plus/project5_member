@@ -100,6 +100,7 @@ public class MemberController {
         if (errors.hasErrors()) {
             throw new BadRequestException(utils.getErrorMessages(errors));
         }
+        System.out.println("form : " + form);
         String token = null;
         try {
             token = tokenProvider.createToken(form.getEmail(), form.getPassword());
