@@ -44,7 +44,9 @@ public class MemberSaveService {
         member.setGender((Gender.valueOf(form.getGender())));
         String hash = passwordEncoder.encode(form.getPassword()); // BCrypt 해시화
         member.setPassword(hash);
-        interestsSave(member, form.getInterests());
+        if (form.getInterests() != null) {
+            interestsSave(member, form.getInterests());
+        }
         System.out.println("form : " + form);
         System.out.println(member);
         save(member);
