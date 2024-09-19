@@ -100,9 +100,12 @@ public class MemberController {
         if (errors.hasErrors()) {
             throw new BadRequestException(utils.getErrorMessages(errors));
         }
-
-        String token = tokenProvider.createToken(form.getEmail(), form.getPassword());
-
+        String token = null;
+        try {
+            token = tokenProvider.createToken(form.getEmail(), form.getPassword());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return new JSONData(token);  // 이상이 없으면 JSONData로 토큰 발급
     }
 
