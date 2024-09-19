@@ -42,8 +42,12 @@ public class TokenProvider {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
         System.out.println("여기2");
         // 이메일과 패스워드로 검증을 하고, 이상이 없으면 토큰을 생성
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-
+        Authentication authentication = null;
+        try {
+            authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         System.out.println("여기3");
         if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetails) {
 
