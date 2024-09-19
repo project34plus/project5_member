@@ -46,7 +46,7 @@ public class ApiRequest {
 
         HttpHeaders headers = new HttpHeaders();
 
-        if (System.getenv("spring.profiles.active").contains("test")) {
+        if (System.getenv("spring.profiles.active") != null && System.getenv("spring.profiles.active").contains("test")) {
             test = true;
         }
 
