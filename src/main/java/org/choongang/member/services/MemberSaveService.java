@@ -75,9 +75,10 @@ public class MemberSaveService {
                 throw new InterestSaveFailException();
             }
 
-            memberRepository.saveAndFlush(member);
 
         }
+
+        memberRepository.saveAndFlush(member);
     }
 
     /**
