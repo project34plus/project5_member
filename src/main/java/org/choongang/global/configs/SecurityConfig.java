@@ -43,7 +43,7 @@ public class SecurityConfig {
                 })
                 .authorizeHttpRequests(c -> {
                     c.requestMatchers(
-                                    "/account/**",
+                                    "/account",
                                     "/account/token",
                                     "/apidocs.html",
                                     "/swagger-ui/**",
