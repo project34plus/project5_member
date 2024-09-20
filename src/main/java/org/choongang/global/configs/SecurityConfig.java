@@ -32,12 +32,18 @@ public class SecurityConfig {
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(h -> {
-                    h.authenticationEntryPoint((req, res, e) -> res.sendError(HttpStatus.UNAUTHORIZED.value()));
-                    h.accessDeniedHandler((req, res, e) -> res.sendError(HttpStatus.UNAUTHORIZED.value()));
+                    h.authenticationEntryPoint((req, res, e) -> {
+                        e.printStackTrace();
+                        res.sendError(HttpStatus.UNAUTHORIZED.value());
+                    });
+                    h.accessDeniedHandler((req, res, e) -> {
+                        e.printStackTrace();
+                        res.sendError(HttpStatus.UNAUTHORIZED.value());
+                    });
                 })
                 .authorizeHttpRequests(c -> {
                     c.requestMatchers(
-                                    "/account/**",
+                                    "/account",
                                     "/account/token",
                                     "/apidocs.html",
                                     "/swagger-ui/**",
