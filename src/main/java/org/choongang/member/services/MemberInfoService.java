@@ -49,8 +49,8 @@ public class MemberInfoService implements UserDetailsService {
 
         List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(authority.name()));
 
-        List<Interests> interests = interestSaveService.interestInfo(member.getEmail());
-        member.setInterests(interests);
+       // List<Interests> interests = interestSaveService.interestInfo(member.getEmail());
+       // member.setInterests(interests);
 
         return MemberInfo.builder()
                 .email(member.getEmail())
