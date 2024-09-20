@@ -23,10 +23,14 @@ public class FileInfoService {
      * @return
      */
     public FileInfo get(Long seq) {
-        ApiRequest result = apiRequest.request("/info/" + seq, "file-service");
+        try {
+            ApiRequest result = apiRequest.request("/info/" + seq, "file-service");
 
-        if (result.getStatus().is2xxSuccessful() && result.getData().isSuccess()) {
-            return result.toObj(FileInfo.class);
+            if (result.getStatus().is2xxSuccessful() && result.getData().isSuccess()) {
+                return result.toObj(FileInfo.class);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return null;
@@ -41,15 +45,19 @@ public class FileInfoService {
      * @return
      */
     public List<FileInfo> getList(String gid, String location, FileStatus status) {
-        String url = "/list/" + gid + "?";
-        if (StringUtils.hasText(location)) url += "&location=" + location;
-        if (status != null) url += "&status=" + status.name();
+        try {
+            String url = "/list/" + gid + "?";
+            if (StringUtils.hasText(location)) url += "&location=" + location;
+            if (status != null) url += "&status=" + status.name();
 
-        ApiRequest result = apiRequest.request(url, "file-service");
-        if (result.getStatus().is2xxSuccessful() && result.getData().isSuccess()) {
-            return result.toList(new TypeReference<>(){});
+            ApiRequest result = apiRequest.request(url, "file-service");
+            if (result.getStatus().is2xxSuccessful() && result.getData().isSuccess()) {
+                return result.toList(new TypeReference<>() {
+                });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
         return null;
     }
 

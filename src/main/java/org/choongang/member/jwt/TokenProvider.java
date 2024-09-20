@@ -36,27 +36,20 @@ public class TokenProvider {
 
     // 토큰 생성하기 (이메일과 패스워드로 토큰 생성)
     public String createToken(String email, String password){
-        System.out.println("여기1");
-        System.out.println("properties:" + properties);
+
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
-        System.out.println("여기2");
-        // 이메일과 패스워드로 검증을 하고, 이상이 없으면 토큰을 생성
-        Authentication authentication = null;
-        try {
-            authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println("여기3");
-        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetails) {
 
-            System.out.println("여기4");
+        // 이메일과 패스워드로 검증을 하고, 이상이 없으면 토큰을 생성
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+
+        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetails) {
             // 로그인 성공 시 -> JWT 토큰을 발급한다. 토큰을 발급하고 제공하는 것이 로그인 절차이다.
             long now = (new Date()).getTime();
             Date validity = new Date(now + properties.getValidSeconds() * 1000);
             // 여기에 지정된 시간만큼 현재 시간에서 유효시간이 설정된다. 환경변수에 따라 충분히 가감이 가능하다.
-            System.out.println("여기5");
+
             return Jwts.builder().setSubject(authentication.getName())
                     .signWith(getKey(), SignatureAlgorithm.HS512)
                     // HMAC + SHA512(Hash를 만들어 주는 것)
