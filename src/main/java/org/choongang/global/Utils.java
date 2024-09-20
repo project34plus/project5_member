@@ -71,11 +71,7 @@ public class Utils { // 빈의 이름 - utils
     public String url(String url, String serviceId) {
         List<ServiceInstance> instances = discoveryClient.getInstances(serviceId);
 
-        try {
-            return String.format("%s%s", instances.get(0).getUri().toString(), url);
-        } catch (Exception e) {
-            return String.format("%s://%s:%d%s%s", request.getScheme(), request.getServerName(), request.getServerPort(), request.getContextPath(), url);
-        }
+        return String.format("%s%s", instances.get(0).getUri().toString(), url);
     }
 
     /**

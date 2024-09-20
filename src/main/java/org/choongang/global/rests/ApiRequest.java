@@ -41,42 +41,46 @@ public class ApiRequest {
     }
 
     public ApiRequest request(String url, String serviceId, HttpMethod method, Object data) {
-        String requestUrl = utils.url(url, serviceId);
-        method = Objects.requireNonNullElse(method, HttpMethod.GET);
+        try {
+            String requestUrl = utils.url(url, serviceId);
+            method = Objects.requireNonNullElse(method, HttpMethod.GET);
 
-        HttpHeaders headers = new HttpHeaders();
+            HttpHeaders headers = new HttpHeaders();
 
-        if (System.getenv("spring.profiles.active").contains("test")) {
-            test = true;
-        }
-
-        tokenService.setApiRequest(this);
-        String token = test ? tokenService.getToken(Objects.requireNonNullElse(authority, Authority.USER)) : utils.getToken();
-        test = false;
-        if (StringUtils.hasText(token)) { // 토큰이 있다면 토큰 함께 전달
-            headers.setBearerAuth(token);
-        }
-
-        if (method != HttpMethod.GET && method != HttpMethod.DELETE) { // POST, PUT, PATCH 방식인 경우
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            try {
-                String body = om.writeValueAsString(data);
-                HttpEntity<String> request = new HttpEntity<>(body, headers);
-                System.out.println("body : " + body);
-                System.out.println("request : " + request);
-                this.response = restTemplate.exchange(URI.create(requestUrl), method, request, JSONData.class);
-
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
+            if (System.getenv("spring.profiles.active") != null && System.getenv("spring.profiles.active").contains("test")) {
+                test = true;
             }
-        } else { // GET 또는 DELETE 방식인 경우
 
-            HttpEntity<Void> request = new HttpEntity<>(headers);
-            this.response = restTemplate.exchange(URI.create(requestUrl), method, request, JSONData.class);
-        }
+            tokenService.setApiRequest(this);
+            String token = test ? tokenService.getToken(Objects.requireNonNullElse(authority, Authority.USER)) : utils.getToken();
+            test = false;
+            if (StringUtils.hasText(token)) { // 토큰이 있다면 토큰 함께 전달
+                headers.setBearerAuth(token);
+            }
 
-        if (this.response != null) {
-            jsonData = this.response.getBody();
+            if (method != HttpMethod.GET && method != HttpMethod.DELETE) { // POST, PUT, PATCH 방식인 경우
+                headers.setContentType(MediaType.APPLICATION_JSON);
+                try {
+                    String body = om.writeValueAsString(data);
+                    HttpEntity<String> request = new HttpEntity<>(body, headers);
+                    System.out.println("body : " + body);
+                    System.out.println("request : " + request);
+                    this.response = restTemplate.exchange(URI.create(requestUrl), method, request, JSONData.class);
+
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+            } else { // GET 또는 DELETE 방식인 경우
+
+                HttpEntity<Void> request = new HttpEntity<>(headers);
+                this.response = restTemplate.exchange(URI.create(requestUrl), method, request, JSONData.class);
+            }
+
+            if (this.response != null) {
+                jsonData = this.response.getBody();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return this;
     }

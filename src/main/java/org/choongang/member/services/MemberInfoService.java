@@ -37,7 +37,6 @@ public class MemberInfoService implements UserDetailsService {
     private final MemberRepository memberRepository;
     private final JPAQueryFactory queryFactory;
     private final HttpServletRequest request;
-    private final FileInfoService fileInfoService;
     private final InterestSaveService interestSaveService;
 
     /* 회원 정보가 필요할 때마다 호출 되는 메서드 */
@@ -50,11 +49,8 @@ public class MemberInfoService implements UserDetailsService {
 
         List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(authority.name()));
 
-        List<FileInfo> files = fileInfoService.getList(member.getGid());
-        if (files != null && !files.isEmpty()) member.setProfileImage(files.get(0));
-
-        List<Interests> interests = interestSaveService.interestInfo(member.getEmail());
-        member.setInterests(interests);
+       // List<Interests> interests = interestSaveService.interestInfo(member.getEmail());
+       // member.setInterests(interests);
 
         return MemberInfo.builder()
                 .email(member.getEmail())
@@ -138,10 +134,13 @@ public class MemberInfoService implements UserDetailsService {
     }
 
     public void addInfo(Member member) {
+        /*
         List<FileInfo> files = fileInfoService.getList(member.getGid());
         if (files != null && !files.isEmpty()) {
             member.setProfileImage(files.get(0));
         }
+
+         */
     }
 
     /* 직업으로 회원 목록 검색 */

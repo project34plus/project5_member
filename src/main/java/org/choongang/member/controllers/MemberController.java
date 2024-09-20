@@ -95,13 +95,14 @@ public class MemberController {
             @Parameter(name = "password", required = true, description = "비밀번호")
     })
     @PostMapping("/account/token")
+    @PreAuthorize("permitAll()")
     public JSONData token(@RequestBody @Valid RequestLogin form, Errors errors) {
 
         if (errors.hasErrors()) {
             throw new BadRequestException(utils.getErrorMessages(errors));
         }
 
-        String token = tokenProvider.createToken(form.getEmail(), form.getPassword());
+        String  token = tokenProvider.createToken(form.getEmail(), form.getPassword());
 
         return new JSONData(token);  // 이상이 없으면 JSONData로 토큰 발급
     }
