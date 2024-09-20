@@ -138,10 +138,13 @@ public class MemberInfoService implements UserDetailsService {
     }
 
     public void addInfo(Member member) {
+        /*
         List<FileInfo> files = fileInfoService.getList(member.getGid());
         if (files != null && !files.isEmpty()) {
             member.setProfileImage(files.get(0));
         }
+
+         */
     }
 
     /* 직업으로 회원 목록 검색 */
