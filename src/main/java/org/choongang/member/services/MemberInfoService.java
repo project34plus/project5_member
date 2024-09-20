@@ -37,7 +37,6 @@ public class MemberInfoService implements UserDetailsService {
     private final MemberRepository memberRepository;
     private final JPAQueryFactory queryFactory;
     private final HttpServletRequest request;
-    private final FileInfoService fileInfoService;
     private final InterestSaveService interestSaveService;
 
     /* 회원 정보가 필요할 때마다 호출 되는 메서드 */
@@ -49,9 +48,6 @@ public class MemberInfoService implements UserDetailsService {
         Authority authority = Objects.requireNonNullElse(member.getAuthorities(), Authority.USER);
 
         List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(authority.name()));
-
-        List<FileInfo> files = fileInfoService.getList(member.getGid());
-        if (files != null && !files.isEmpty()) member.setProfileImage(files.get(0));
 
         List<Interests> interests = interestSaveService.interestInfo(member.getEmail());
         member.setInterests(interests);
