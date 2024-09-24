@@ -70,7 +70,7 @@ public class MemberSaveService {
 
         if (member.getInterests() != null) {
             ApiRequest result = apiRequest.request("/interest/update/" + member.getEmail(), "thesis-service", HttpMethod.PATCH, member.getInterests());
-            if (!result.getStatus().is2xxSuccessful()) {
+            if (result != null && !result.getStatus().is2xxSuccessful()) {
                 System.out.println(result);
                 throw new InterestSaveFailException();
             }
