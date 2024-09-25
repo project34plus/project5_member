@@ -43,7 +43,7 @@ public class Member extends BaseEntity {
     private String mobile;
 
     @Column(nullable = false)
-    @JsonFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birth;
 
     @NotNull
