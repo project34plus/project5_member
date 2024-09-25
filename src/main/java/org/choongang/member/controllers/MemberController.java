@@ -172,6 +172,7 @@ public class MemberController {
     @Operation(summary = "직업 종류 목록", method = "GET")
     @ApiResponse(responseCode = "200", description = "직업 목록 조회")
     @GetMapping("/job")
+    @PreAuthorize("permitAll()")
     public JSONData getJobs() {
         return new JSONData(Job.getList());
     }

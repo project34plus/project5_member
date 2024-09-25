@@ -47,7 +47,8 @@ public class SecurityConfig {
                                     "/account/token",
                                     "/apidocs.html",
                                     "/swagger-ui/**",
-                                    "/api-docs/**"
+                                    "/api-docs/**",
+                                    "/job"
                             ).permitAll()// 회원가입, 로그인(토큰)은 모든 접근 가능
                             .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
                             .anyRequest().authenticated(); // 그외에는 인증 필요
