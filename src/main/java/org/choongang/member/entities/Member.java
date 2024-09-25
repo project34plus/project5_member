@@ -1,5 +1,6 @@
 package org.choongang.member.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -42,6 +43,7 @@ public class Member extends BaseEntity {
     private String mobile;
 
     @Column(nullable = false)
+    @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate birth;
 
     @NotNull
