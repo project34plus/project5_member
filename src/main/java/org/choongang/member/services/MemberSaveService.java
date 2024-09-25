@@ -86,7 +86,7 @@ public class MemberSaveService {
      *
      * @param form
      */
-    public Member save(RequestUpdate form) {
+    public void save(RequestUpdate form) {
 
         String email = null;
         if (memberUtil.isAdmin() && StringUtils.hasText(form.getEmail())) {
@@ -113,12 +113,16 @@ public class MemberSaveService {
             member.setPassword(hash);
         }
 
+        //interests
+        List<Interests> interests = new ArrayList<Interests>();
+        form.getInterests().stream().filter(StringUtils::hasText).forEach(i -> interests.add(new Interests(i, member.getEmail())));
+        System.out.println("interests : " + interests);
+        member.setInterests(interests);
         Authority authority = StringUtils.hasText(form.getAuthority()) ? Authority.valueOf(form.getAuthority()) : Authority.USER;
         member.setAuthorities(authority);
 
         save(member);
 
-        return member;
     }
 
 
