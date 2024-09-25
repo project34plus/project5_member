@@ -5,8 +5,6 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.choongang.file.entities.FileInfo;
-import org.choongang.file.services.FileInfoService;
 import org.choongang.global.ListData;
 import org.choongang.global.Pagination;
 import org.choongang.member.MemberInfo;
@@ -16,7 +14,6 @@ import org.choongang.member.controllers.MemberSearch;
 import org.choongang.member.entities.Member;
 import org.choongang.member.entities.QMember;
 import org.choongang.member.repositories.MemberRepository;
-import org.choongang.thisis.entities.Interests;
 import org.choongang.thisis.services.InterestSaveService;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -69,6 +66,7 @@ public class MemberInfoService implements UserDetailsService {
      */
     @Transactional
     public ListData<Member> getList(MemberSearch search) {
+        System.out.println("search:" + search);
         int page = Math.max(search.getPage(), 1);
         int limit = search.getLimit();
         limit = limit < 1 ? 20 : limit;
@@ -95,7 +93,7 @@ public class MemberInfoService implements UserDetailsService {
             BooleanExpression condition = null;
 
             if (sopt.equals("ALL")) { // 통합 검색
-                condition = member.email.contains(skey).or(member.userName.contains(skey)).or(member.job.stringValue().contains(skey));
+                condition = member.email.contains(skey).or(member.userName.contains(skey));
 
             } else if (sopt.equals("email")) { // 이메일로 검색
                 condition = member.email.contains(skey);
@@ -105,18 +103,18 @@ public class MemberInfoService implements UserDetailsService {
 
             } else if (sopt.equals("job")) {
                 // 직업으로 검색
-                condition = member.job.stringValue().contains(skey);
+                //condition = member.job.stringValue().contains(skey);
             }
 
             if (condition != null) andBuilder.and(condition);
         }
-
+        /*
         List<String> job = search.getJob();
         if (job != null && !job.isEmpty()) {
             List<Job> _job = job.stream().map(Job::valueOf).toList();
             andBuilder.and(member.job.in(_job));
         }
-
+        */
         /* 검색 처리 E */
 
         List<Member> items = queryFactory.selectFrom(member)
