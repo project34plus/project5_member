@@ -102,7 +102,7 @@ public class MemberController {
             throw new BadRequestException(utils.getErrorMessages(errors));
         }
 
-        String  token = tokenProvider.createToken(form.getEmail(), form.getPassword());
+        String token = tokenProvider.createToken(form.getEmail(), form.getPassword());
 
         return new JSONData(token);  // 이상이 없으면 JSONData로 토큰 발급
     }
@@ -153,9 +153,9 @@ public class MemberController {
     @ApiResponse(responseCode = "200", description = "회원 조회")
     @GetMapping("/job-member")
     public JSONData getUsersByJob(MemberSearch search) {
-       ListData<Member> items = infoService.getList(search);
+        ListData<Member> items = infoService.getList(search);
 
-       return new JSONData(items);
+        return new JSONData(items);
     }
 
     /* 회원 이메일로 직업 조회 */
@@ -165,7 +165,7 @@ public class MemberController {
     public JSONData getJobByEmail(@RequestParam String email) {
         Job job = infoService.getJobByEmail(email);
 
-        return new JSONData(new String[] {job.name(), job.getTitle()});
+        return new JSONData(new String[]{job.name(), job.getTitle()});
     }
 
     /* 직업 목록 조회 */
