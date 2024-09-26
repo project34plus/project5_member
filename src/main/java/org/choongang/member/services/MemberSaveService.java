@@ -20,10 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Transactional
@@ -133,5 +130,13 @@ public class MemberSaveService {
             targetInterests.add(_interest);
         }
         member.setInterests(targetInterests);
+    }
+
+    public void changeStatus(String email, Authority authority) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+
+        member.setAuthorities(authority);
+
+        memberRepository.saveAndFlush(member);
     }
 }
