@@ -97,4 +97,11 @@ public class MemberAdminController {
     public void withdraw() {
         memberDeleteService.withdraw();
     }
+
+    @Operation(summary = "회원 삭제", method = "DELETE")
+    @ApiResponse(responseCode = "200", description = "회원 탈퇴")
+    @DeleteMapping("/delete/{seq}")
+    public void delete(@PathVariable("seq") Long seq) {
+        memberDeleteService.deletePerson(seq);
+    }
 }
