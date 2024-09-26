@@ -93,7 +93,6 @@ public class MemberInfoService implements UserDetailsService {
             BooleanExpression condition = null;
 
             if (sopt.equals("ALL")) { // 통합 검색
-                if (sopt.equals("ALL")) { // 통합 검색
                 condition = member.email.contains(skey).or(member.userName.contains(skey)).or(member.job.stringValue().contains(skey));
 
             } else if (sopt.equals("email")) { // 이메일로 검색
