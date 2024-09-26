@@ -25,4 +25,9 @@ public class MemberDeleteService {
         }
         memberRepository.save(member);
     }
+    public void deletePerson(Long seq){
+        Member member = memberRepository.findById(seq).orElseThrow(null);
+        member.setDeletedAt(LocalDateTime.now());
+        memberRepository.save(member);
+    }
 }
