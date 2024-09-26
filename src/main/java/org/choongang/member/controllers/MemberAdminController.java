@@ -13,6 +13,7 @@ import org.choongang.global.exceptions.BadRequestException;
 import org.choongang.global.rests.JSONData;
 import org.choongang.member.MemberInfo;
 import org.choongang.member.MemberUtil;
+import org.choongang.member.constants.Authority;
 import org.choongang.member.entities.Member;
 import org.choongang.member.services.MemberDeleteService;
 import org.choongang.member.services.MemberInfoService;
@@ -89,6 +90,12 @@ public class MemberAdminController {
         Member member = memberUtil.getMember();
 
         return new JSONData(member);
+    }
+
+    @Operation(summary = "회원 권한 변경", method = "GET")
+    @GetMapping("/status/{email}/{authority}")
+    public void changeAuthority(@PathVariable("email") String email, @PathVariable("authority") String authority) {
+        memberSaveService.changeStatus(email, Authority.valueOf(authority));
     }
 
     @Operation(summary = "회원 탈퇴", method = "PATCH")
