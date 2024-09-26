@@ -103,7 +103,7 @@ public class MemberInfoService implements UserDetailsService {
 
             } else if (sopt.equals("job")) {
                 // 직업으로 검색
-                //condition = member.job.stringValue().contains(skey);
+                condition = member.job.stringValue().contains(skey);
             }
 
             if (condition != null) andBuilder.and(condition);
